@@ -5,147 +5,259 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SYSTEM</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#000000">
+    <meta name="theme-color" content="#050505">
     <link rel="icon" type="image/png" href="icon.png">
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        /* CONFIGURAÇÕES VISUAIS DO SISTEMA */
+        /* --- CORE VISUALS --- */
         :root {
-            --primary-color: #00eaff; 
-            --danger-color: #ff3333;  
-            --gold-color: #ffaa00;    
+            --primary: #00eaff; /* Azul Jin-Woo */
+            --danger: #ff3333;  /* Vermelho Punição */
+            --gold: #ffaa00;    /* Rank S / Ouro */
+            --rank-e: #ffffff;
+            --rank-b: #00aaff;
             --dark-bg: #050505;
-            --panel-bg: rgba(0, 40, 60, 0.8);
+            --panel: rgba(0, 30, 50, 0.85);
         }
+
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
+        
         body {
             background-color: var(--dark-bg);
             background-image: linear-gradient(rgba(0, 20, 30, 0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 20, 30, 0.8) 1px, transparent 1px);
             background-size: 30px 30px;
-            color: var(--primary-color);
+            color: var(--primary);
             font-family: 'Share Tech Mono', monospace;
             min-height: 100vh;
-            display: flex; flex-direction: column; align-items: center; padding: 10px;
+            display: flex; flex-direction: column; align-items: center; padding: 10px; padding-bottom: 90px;
+            transition: all 1s ease;
         }
-        body.penalty-mode { --primary-color: #ff3333; background-image: linear-gradient(rgba(40, 0, 0, 0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(40, 0, 0, 0.8) 1px, transparent 1px); }
-        
-        /* LAYOUT PRINCIPAL */
-        .system-window { width: 100%; max-width: 500px; padding-bottom: 80px; animation: holoOpen 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards; opacity: 0; }
-        @keyframes holoOpen { 0% { transform: scaleY(0.005) scaleX(0); opacity: 0; } 50% { transform: scaleY(0.005) scaleX(1); opacity: 1; } 100% { transform: scaleY(1) scaleX(1); opacity: 1; } }
-        
-        header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; margin-bottom: 20px; }
-        h1 { font-size: 1.8rem; text-shadow: 0 0 10px var(--primary-color); margin: 0; }
-        .level-badge { font-size: 1.2rem; }
-        .gold-display { color: var(--gold-color); font-weight: bold; }
 
-        /* NAVEGAÇÃO (Fixa no fundo para parecer App) */
-        .nav-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%; background: #000; border-top: 1px solid var(--primary-color);
-            display: flex; justify-content: space-around; padding: 10px 0; z-index: 100;
+        /* --- MODO EMERGÊNCIA (3 Horas Restantes) --- */
+        body.emergency {
+            --primary: #ff3333; /* Tudo vira vermelho */
+            background-image: linear-gradient(rgba(40, 0, 0, 0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(40, 0, 0, 0.8) 1px, transparent 1px);
+            animation: pulse-bg 2s infinite;
         }
-        .nav-btn { background: none; border: none; color: #555; font-family: inherit; font-size: 0.8rem; text-transform: uppercase; }
-        .nav-btn.active { color: var(--primary-color); text-shadow: 0 0 5px var(--primary-color); font-weight: bold; }
+        @keyframes pulse-bg { 0% { box-shadow: inset 0 0 0px #300; } 50% { box-shadow: inset 0 0 50px #500; } 100% { box-shadow: inset 0 0 0px #300; } }
 
-        /* CONTEÚDO */
+        /* --- HEADER DO PERFIL (Fiel ao Anime) --- */
+        .profile-grid {
+            width: 100%; max-width: 500px;
+            display: grid; grid-template-columns: auto 1fr; gap: 10px;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 15px; margin-bottom: 20px;
+        }
+        .p-label { font-size: 0.75rem; color: #888; margin-right: 5px; }
+        .p-val { font-size: 1rem; color: #fff; font-weight: bold; }
+        .rank-badge { color: var(--gold); text-shadow: 0 0 5px var(--gold); font-size: 1.2rem; }
+
+        /* --- TIMER --- */
+        .timer-box {
+            position: absolute; top: 10px; right: 10px;
+            font-size: 0.9rem; border: 1px solid var(--primary);
+            padding: 2px 5px; background: rgba(0,0,0,0.8);
+        }
+
+        /* --- LAYOUT GERAL --- */
+        .system-window { width: 100%; max-width: 500px; opacity: 0; animation: holoOpen 0.8s forwards; }
+        @keyframes holoOpen { from { opacity: 0; transform: scaleY(0.1); } to { opacity: 1; transform: scaleY(1); } }
+
         .content-section { display: none; }
-        .content-section.active { display: block; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .content-section.active { display: block; animation: fadeIn 0.4s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .stat-box { border: 1px solid var(--primary-color); padding: 10px; margin-bottom: 10px; background: rgba(0,0,0,0.5); }
-        .stat-row { display: flex; justify-content: space-between; align-items: center; margin: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 2px;}
-        
-        .bar-container { width: 100%; height: 10px; background: #222; margin-top: 5px; border: 1px solid #444; }
-        .bar-fill { height: 100%; background: var(--primary-color); width: 0%; transition: width 0.5s; box-shadow: 0 0 8px var(--primary-color); }
+        /* --- STATUS BARS --- */
+        .bar-container { width: 100%; height: 8px; background: #222; margin-top: 3px; border: 1px solid #444; }
+        .bar-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.5s; box-shadow: 0 0 8px var(--primary); }
 
-        .quest-item { background: rgba(0, 50, 70, 0.3); border: 1px solid var(--primary-color); padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .quest-item.completed { opacity: 0.5; text-decoration: line-through; border-color: #555; }
-        .quest-checkbox { width: 25px; height: 25px; accent-color: var(--primary-color); }
+        /* --- MISSÕES --- */
+        .quest-item {
+            background: rgba(0, 20, 30, 0.5); border: 1px solid var(--primary);
+            padding: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .quest-item.completed { opacity: 0.5; text-decoration: line-through; border-color: #444; color: #777; }
+        .quest-checkbox { width: 22px; height: 22px; accent-color: var(--primary); cursor: pointer; }
 
-        .action-btn { width: 100%; padding: 15px; background: var(--primary-color); color: #000; border: none; font-weight: bold; font-family: inherit; font-size: 1rem; margin-top: 20px; cursor: pointer; }
+        /* --- LOJA --- */
         .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .shop-item { border: 1px solid var(--gold-color); padding: 10px; text-align: center; }
+        .shop-item { border: 1px solid var(--gold); padding: 10px; text-align: center; background: rgba(20, 15, 0, 0.3); cursor: pointer; }
+        .shop-item:active { transform: scale(0.98); }
+        .shop-desc { font-size: 0.7rem; color: #aaa; margin-top: 5px; }
+
+        /* --- ZONA DE PUNIÇÃO --- */
+        .penalty-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 999;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+            border: 3px solid red; box-shadow: inset 0 0 50px red;
+            animation: shake 0.5s infinite;
+        }
+        @keyframes shake { 0% { transform: translate(1px, 1px); } 50% { transform: translate(-1px, -1px); } 100% { transform: translate(1px, -1px); } }
+
+        /* --- NAVEGAÇÃO --- */
+        .nav-bar {
+            position: fixed; bottom: 0; left: 0; width: 100%; background: #000; border-top: 1px solid var(--primary);
+            display: flex; justify-content: space-around; padding: 12px 0; z-index: 100;
+        }
+        .nav-btn { background: none; border: none; color: #555; font-family: inherit; font-size: 0.9rem; text-transform: uppercase; font-weight: bold; }
+        .nav-btn.active { color: var(--primary); text-shadow: 0 0 8px var(--primary); }
         
         /* Notificação */
-        #notification { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.95); border: 1px solid var(--primary-color); color: var(--primary-color); padding: 15px 30px; z-index: 200; display: none; text-align: center; box-shadow: 0 0 20px var(--primary-color); width: 80%; }
+        #notification { 
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.95); border: 1px solid var(--primary); color: var(--primary);
+            padding: 20px; z-index: 200; display: none; text-align: center; width: 80%;
+            box-shadow: 0 0 30px var(--primary); font-size: 1.1rem;
+        }
     </style>
 </head>
 <body>
-    <div id="notification">MENSAGEM DO SISTEMA</div>
+    <div id="notification">MENSAGEM</div>
+    
+    <div id="penalty-zone" class="penalty-overlay">
+        <h1 style="color: red; font-size: 2.5rem; margin-bottom: 20px;">PENALTY ZONE</h1>
+        <p style="color: #fff; text-align: center; margin-bottom: 30px;">A MISSÃO DIÁRIA NÃO FOI CUMPRIDA.<br>SOBREVIVA POR 4 HORAS OU CUMPRA A TAREFA DE EMERGÊNCIA.</p>
+        <div style="border: 1px solid red; padding: 15px; color: red; margin-bottom: 20px;">
+            TAREFA: CORRER 5KM AGORA
+        </div>
+        <button onclick="game.usePotion()" style="background: #00eaff; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer;">USAR PEDRA DE RETORNO (1)</button>
+        <button onclick="game.clearPenalty()" style="background: transparent; border: 1px solid red; color: red; padding: 10px 20px; margin-top: 10px; cursor: pointer;">JÁ PAGUEI A PUNIÇÃO</button>
+    </div>
 
     <div class="system-window">
-        <header>
-            <div>
-                <h1>STATUS</h1>
-                <span style="font-size: 0.8rem; letter-spacing: 2px;">PLAYER</span>
-            </div>
-            <div style="text-align: right;">
-                <div class="level-badge">LVL. <span id="lvl">1</span></div>
-                <div class="gold-display"><span id="gold">0</span> G</div>
-            </div>
-        </header>
+        <div class="timer-box" id="daily-timer">00:00:00</div>
 
-        <div id="tab-status" class="content-section active">
-            <div style="margin-bottom: 15px;">
-                <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
-                    <span>EXP</span> <span id="xp-display">0 / 100</span>
+        <div class="profile-grid">
+            <div style="border-right: 1px solid var(--primary); padding-right: 10px; display: flex; flex-direction: column; justify-content: center;">
+                <div class="p-label">NAME</div>
+                <div class="p-val">SUNG JIN-WOO</div> </div>
+            <div style="padding-left: 10px;">
+                <div style="display: flex; justify-content: space-between;">
+                    <div><span class="p-label">LEVEL</span> <span id="lvl-display" class="p-val">1</span></div>
+                    <div id="rank-display" class="rank-badge">E-RANK</div>
                 </div>
-                <div class="bar-container"><div id="xp-bar" class="bar-fill"></div></div>
-            </div>
-
-            <div class="stat-box">
-                <div style="text-align: right; color: var(--gold-color); margin-bottom: 5px;">PTS: <span id="pts">0</span></div>
-                <div id="stats-container">
-                    </div>
+                <div style="margin-top: 5px;">
+                    <span class="p-label">CLASS</span> <span id="class-display" class="p-val">NONE</span>
+                </div>
+                <div style="margin-top: 5px;">
+                    <span class="p-label">TITLE</span> <span id="title-display" class="p-val">NONE</span>
+                </div>
             </div>
         </div>
 
+        <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.8rem;">
+            <span>GOLD: <span id="gold-display" style="color: var(--gold-color)">0</span></span>
+            <span>XP: <span id="xp-text">0/100</span></span>
+        </div>
+        <div class="bar-container" style="margin-bottom: 20px;"><div id="xp-bar" class="bar-fill"></div></div>
+
+        <div id="tab-status" class="content-section active">
+            <h3 style="border-bottom: 1px solid var(--primary); margin-bottom: 10px;">ATRIBUTOS</h3>
+            <div style="text-align: right; color: var(--gold); margin-bottom: 5px;">PTS DISPONÍVEIS: <span id="pts">0</span></div>
+            <div id="stats-container"></div> </div>
+
         <div id="tab-quests" class="content-section">
-            <h3 style="text-align: center; color: var(--gold-color); margin-bottom: 15px;">[MISSÃO DIÁRIA]</h3>
-            <div id="quest-list"></div>
-            <button class="action-btn" onclick="game.finishDay()">FINALIZAR O DIA</button>
+            <h3 style="text-align: center; color: var(--gold); margin-bottom: 5px;">[MISSÃO DIÁRIA]</h3>
+            <p style="text-align: center; font-size: 0.7rem; color: #888; margin-bottom: 15px;">"A FORÇA VEM DA CONSTÂNCIA"</p>
+            <div id="quest-list"></div> <button onclick="game.finishDay()" style="width: 100%; padding: 15px; margin-top: 20px; background: transparent; border: 1px solid var(--primary); color: var(--primary); font-weight: bold;">FINALIZAR MISSÃO</button>
         </div>
 
         <div id="tab-shop" class="content-section">
-            <h3 style="margin-bottom: 15px;">MERCADO</h3>
+            <h3 style="margin-bottom: 15px; color: var(--gold);">LOJA DO SISTEMA</h3>
             <div class="shop-grid">
-                <div class="shop-item" onclick="game.buy('Chocolate', 50)"><h4>Chocolate</h4><span style="color:var(--gold-color)">50 G</span></div>
-                <div class="shop-item" onclick="game.buy('Energético', 100)"><h4>Energético</h4><span style="color:var(--gold-color)">100 G</span></div>
-                <div class="shop-item" onclick="game.buy('Skin Jogo', 500)"><h4>Skin</h4><span style="color:var(--gold-color)">500 G</span></div>
-                <div class="shop-item" onclick="game.buy('Lanche', 300)"><h4>Lanche</h4><span style="color:var(--gold-color)">300 G</span></div>
+                <div class="shop-item" onclick="game.buy('Pedra de Retorno', 200, 'item')">
+                    <h4>PEDRA DE RETORNO</h4>
+                    <div class="shop-desc">Remove a Punição ou restaura status.</div>
+                    <span style="color:var(--gold)">200 G</span>
+                </div>
+                <div class="shop-item" onclick="game.buy('XP Booster', 150, 'instant')">
+                    <h4>CONHECIMENTO</h4>
+                    <div class="shop-desc">+50 XP Imediato.</div>
+                    <span style="color:var(--gold)">150 G</span>
+                </div>
+                <div class="shop-item" onclick="game.buy('Chocolate', 50, 'real')">
+                    <h4>RECOMPENSA REAL</h4>
+                    <div class="shop-desc">Permissão para comer doce.</div>
+                    <span style="color:var(--gold)">50 G</span>
+                </div>
+                <div class="shop-item" onclick="game.buy('Upgrade Setup', 1000, 'real')">
+                    <h4>UPGRADE SETUP</h4>
+                    <div class="shop-desc">Item físico pro seu quarto.</div>
+                    <span style="color:var(--gold)">1000 G</span>
+                </div>
             </div>
+            
             <h3 style="margin-top: 20px;">INVENTÁRIO</h3>
-            <div id="inv-list" style="margin-top:10px; font-size: 0.9rem;"></div>
+            <div id="inv-list" style="margin-top:10px; font-size: 0.8rem; border-top: 1px dashed #333;"></div>
         </div>
     </div>
 
     <nav class="nav-bar">
-        <button class="nav-btn active" onclick="ui.tab('status')">STATUS</button>
+        <button class="nav-btn active" onclick="ui.tab('status')">PERFIL</button>
         <button class="nav-btn" onclick="ui.tab('quests')">MISSÕES</button>
         <button class="nav-btn" onclick="ui.tab('shop')">LOJA</button>
     </nav>
 
     <script>
-        // --- MOTOR DO JOGO ---
         const game = {
             data: {
                 lvl: 1, xp: 0, xpMax: 100, gold: 0, pts: 0,
-                stats: { STR: 10, AGI: 10, INT: 10, SEN: 10 },
+                rank: 'E', classTitle: 'NONE', title: 'NONE',
+                stats: { FOR: 10, AGI: 10, INT: 10, SEN: 10, VIT: 10 },
                 quests: [
-                    { txt: 'Shorts/Reels', xp: 20, gold: 10, done: false },
-                    { txt: 'Estudo Diário', xp: 20, gold: 10, done: false },
-                    { txt: 'Flexões', xp: 30, gold: 20, done: false, count: 10, isFlex: true }
+                    { txt: 'Postar Short/Reel', xp: 25, gold: 15, done: false }, // Trabalho
+                    { txt: 'Estudo Focado (30m)', xp: 20, gold: 10, done: false }, // Intelecto
+                    { txt: 'Flexões', xp: 30, gold: 20, done: false, count: 10, type: 'pro' }, // Físico
+                    { txt: 'Beber 2L Água', xp: 10, gold: 5, done: false }, // Saúde (Simples)
+                    { txt: 'Meditação/Leitura', xp: 15, gold: 10, done: false } // Mente (Sem stress)
                 ],
                 inventory: [],
-                penalty: false
+                lastLogin: null
             },
-            init() {
-                const save = localStorage.getItem('sl_save_v1');
-                if(save) this.data = JSON.parse(save);
-                if(this.data.penalty) document.body.classList.add('penalty-mode');
-                ui.render();
-            },
-            save() { localStorage.setItem('sl_save_v1', JSON.stringify(this.data)); },
             
+            init() {
+                const save = localStorage.getItem('sl_sys_v3');
+                if(save) this.data = JSON.parse(save);
+                
+                // Reseta missões se mudou o dia
+                const today = new Date().toDateString();
+                if(this.data.lastLogin !== today) {
+                    this.data.quests.forEach(q => q.done = false);
+                    this.data.lastLogin = today;
+                    this.save();
+                }
+
+                this.updateRank();
+                ui.render();
+                setInterval(this.clockLoop, 1000); // Inicia o relógio
+            },
+
+            save() { localStorage.setItem('sl_sys_v3', JSON.stringify(this.data)); },
+
+            clockLoop() {
+                const now = new Date();
+                const end = new Date();
+                end.setHours(23, 59, 59);
+                
+                const diff = end - now;
+                const hours = Math.floor(diff / (1000 * 60 * 60));
+                const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+                document.getElementById('daily-timer').innerText = 
+                    `${String(hours).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+
+                // MODO EMERGÊNCIA (Faltando 3 horas = 21:00)
+                if (hours < 3) {
+                    document.body.classList.add('emergency');
+                    document.getElementById('daily-timer').style.color = 'red';
+                    document.getElementById('daily-timer').style.borderColor = 'red';
+                } else {
+                    document.body.classList.remove('emergency');
+                }
+            },
+
             addStat(key) {
                 if(this.data.pts > 0) {
                     this.data.stats[key]++;
@@ -153,47 +265,92 @@
                     this.save(); ui.render();
                 }
             },
+
             toggleQuest(idx) {
                 const q = this.data.quests[idx];
                 if(q.done) return;
+                
                 q.done = true;
                 this.data.xp += q.xp;
                 this.data.gold += q.gold;
-                if(q.isFlex) this.data.quests[idx].count += 2; // Aumenta flexões
+                
+                // Lógica de progressão das flexões
+                if(q.type === 'pro') this.data.quests[idx].count += 2;
+
                 this.checkLvl();
                 ui.notify(`COMPLETO! +${q.xp}XP`);
                 this.save(); ui.render();
             },
+
             checkLvl() {
                 if(this.data.xp >= this.data.xpMax) {
                     this.data.lvl++;
                     this.data.xp -= this.data.xpMax;
                     this.data.xpMax = Math.floor(this.data.xpMax * 1.2);
                     this.data.pts += 3;
+                    this.updateRank();
                     ui.notify("LEVEL UP!");
                 }
             },
+
+            updateRank() {
+                const l = this.data.lvl;
+                // Sistema de Ranks e Títulos Fiel
+                if(l < 10) { this.data.rank = 'E'; this.data.title = 'NONE'; }
+                else if(l < 20) { this.data.rank = 'D'; this.data.title = 'WOLF SLAYER'; }
+                else if(l < 30) { this.data.rank = 'C'; this.data.title = 'ADVERSITY OVERCOMER'; }
+                else if(l < 50) { this.data.rank = 'B'; this.data.classTitle = 'NECROMANCER'; }
+                else if(l < 80) { this.data.rank = 'A'; this.data.classTitle = 'SHADOW MONARCH'; }
+                else { this.data.rank = 'S'; this.data.title = 'KING OF DEAD'; }
+            },
+
             finishDay() {
                 if(this.data.quests.every(q => q.done)) {
-                    this.data.quests.forEach(q => q.done = false);
-                    ui.notify("DIA FINALIZADO. BOM TRABALHO.");
+                    ui.notify("MISSÃO DIÁRIA CUMPRIDA.");
                 } else {
-                    this.data.penalty = true;
-                    document.body.classList.add('penalty-mode');
-                    ui.notify("FALHA. ZONA DE PUNIÇÃO ATIVADA.");
+                    // PUNIÇÃO
+                    document.getElementById('penalty-zone').style.display = 'flex';
                 }
-                this.save(); ui.render();
             },
-            buy(item, cost) {
-                if(this.data.penalty) return ui.notify("BLOQUEADO PELA PUNIÇÃO");
+
+            buy(name, cost, type) {
                 if(this.data.gold >= cost) {
                     this.data.gold -= cost;
-                    this.data.inventory.push(item);
-                    this.save(); ui.render(); ui.notify("COMPRADO!");
-                } else ui.notify("OURO INSUFICIENTE");
+                    if(type === 'instant') {
+                        this.data.xp += 50;
+                        this.checkLvl();
+                        ui.notify("Conhecimento absorvido!");
+                    } else {
+                        this.data.inventory.push(name);
+                        ui.notify("Item Adquirido!");
+                    }
+                    this.save(); ui.render();
+                } else {
+                    ui.notify("OURO INSUFICIENTE");
+                }
             },
+
+            usePotion() {
+                const idx = this.data.inventory.indexOf('Pedra de Retorno');
+                if(idx > -1) {
+                    this.data.inventory.splice(idx, 1);
+                    document.getElementById('penalty-zone').style.display = 'none';
+                    ui.notify("PENALIDADE REMOVIDA PELO ITEM.");
+                    this.save(); ui.render();
+                } else {
+                    alert("Você não possui uma Pedra de Retorno!");
+                }
+            },
+
+            clearPenalty() {
+                // Aqui seria o botão 'já paguei' se ele fez a punição física
+                if(confirm("Você realmente completou a punição física? O sistema sabe se você mentir.")) {
+                    document.getElementById('penalty-zone').style.display = 'none';
+                }
+            },
+
             useItem(idx) {
-                if(confirm("Usar item?")) {
+                if(confirm("Usar este item?")) {
                     this.data.inventory.splice(idx, 1);
                     this.save(); ui.render();
                 }
@@ -202,55 +359,45 @@
 
         const ui = {
             tab(name) {
-                document.querySelectorAll('.content-section').forEach(d => d.classList.remove('active'));
+                document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
                 document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
                 document.getElementById('tab-'+name).classList.add('active');
                 event.target.classList.add('active');
             },
             render() {
                 const d = game.data;
-                document.getElementById('lvl').innerText = d.lvl;
-                document.getElementById('gold').innerText = d.gold;
-                document.getElementById('xp-display').innerText = `${d.xp} / ${d.xpMax}`;
+                document.getElementById('lvl-display').innerText = d.lvl;
+                document.getElementById('gold-display').innerText = d.gold;
+                document.getElementById('xp-text').innerText = `${d.xp}/${d.xpMax}`;
                 document.getElementById('xp-bar').style.width = (d.xp/d.xpMax*100) + '%';
                 document.getElementById('pts').innerText = d.pts;
+                
+                // Header Info
+                document.getElementById('rank-display').innerText = d.rank + '-RANK';
+                document.getElementById('rank-display').style.color = d.rank === 'S' ? 'gold' : d.rank === 'E' ? 'white' : '#00eaff';
+                document.getElementById('class-display').innerText = d.classTitle;
+                document.getElementById('title-display').innerText = d.title;
 
-                // Status
-                let statHtml = '';
-                for(let key in d.stats) {
-                    statHtml += `<div class="stat-row">
-                        <span>${key}</span> 
-                        <div>
-                            <span style="margin-right:10px">${d.stats[key]}</span>
-                            ${d.pts > 0 ? `<button onclick="game.addStat('${key}')" style="background:var(--primary-color)">+</button>` : ''}
-                        </div>
-                    </div>`;
-                }
-                document.getElementById('stats-container').innerHTML = statHtml;
+                // Stats
+                let html = '';
+                for(let k in d.stats) html += `<div style="display:flex; justify-content:space-between; padding:5px; border-bottom:1px solid #333"><span>${k}</span> <div>${d.stats[k]} ${d.pts>0?`<button onclick="game.addStat('${k}')" style="background:var(--primary); border:none; width:20px;">+</button>`:''}</div></div>`;
+                document.getElementById('stats-container').innerHTML = html;
 
                 // Quests
                 let qHtml = '';
-                if(d.penalty) {
-                    qHtml = `<div class="quest-item" style="border-color:red; color:red">
-                        <div>[PUNIÇÃO] Sobreviva até completar 50 flexões extras.</div>
-                        <button onclick="game.data.penalty=false; document.body.classList.remove('penalty-mode'); game.save(); ui.render()">FEITO</button>
+                d.quests.forEach((q, i) => {
+                    qHtml += `<div class="quest-item ${q.done?'completed':''}">
+                        <span>${q.txt} ${q.count ? `(${q.count})` : ''}</span>
+                        ${!q.done ? `<input type="checkbox" class="quest-checkbox" onchange="game.toggleQuest(${i})">` : ''}
                     </div>`;
-                } else {
-                    d.quests.forEach((q, i) => {
-                        qHtml += `<div class="quest-item ${q.done ? 'completed' : ''}">
-                            <span>${q.txt} ${q.isFlex ? `(${q.count})` : ''}</span>
-                            ${!q.done ? `<input type="checkbox" class="quest-checkbox" onchange="game.toggleQuest(${i})">` : ''}
-                        </div>`;
-                    });
-                }
+                });
                 document.getElementById('quest-list').innerHTML = qHtml;
 
                 // Inv
-                document.getElementById('inv-list').innerHTML = d.inventory.map((it, i) => 
-                    `<div style="border-bottom:1px dashed #333; padding:5px; display:flex; justify-content:space-between">
-                        ${it} <span onclick="game.useItem(${i})" style="cursor:pointer; color:var(--primary-color)">[USAR]</span>
-                    </div>`
-                ).join('') || 'Vazio';
+                const invDiv = document.getElementById('inv-list');
+                invDiv.innerHTML = d.inventory.length ? d.inventory.map((it, i) => 
+                    `<div style="padding:8px; border-bottom:1px dashed #444; display:flex; justify-content:space-between;">${it} <span onclick="game.useItem(${i})" style="color:var(--primary); cursor:pointer">[USAR]</span></div>`
+                ).join('') : '<div style="padding:10px; color:#555; text-align:center">Inventário Vazio</div>';
             },
             notify(msg) {
                 const n = document.getElementById('notification');
@@ -258,12 +405,9 @@
                 setTimeout(() => n.style.display = 'none', 3000);
             }
         };
-        game.init();
 
-        // PWA SERVICE WORKER REGISTRATION
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
-        }
+        game.init();
+        if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
     </script>
 </body>
 </html>
