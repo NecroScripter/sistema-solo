@@ -3,81 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SYSTEM V13</title>
+    <title>SYSTEM V14</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700&family=Noto+Sans+SC&family=Noto+Sans+JP&display=swap" rel="stylesheet">
     <style>
-        :root { --blue: #00eaff; --glow: 0 0 15px #00eaff; --bg: #02050a; }
+        :root { --blue: #00eaff; --glow: 0 0 10px #00eaff; --bg: #02050a; }
         body.lang-cjk { font-family: 'Noto Sans SC', 'Noto Sans JP', sans-serif !important; }
-        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; outline: none;}
         body { background: var(--bg); color: #fff; font-family: 'Chakra Petch', sans-serif; min-height: 100vh; padding: 15px; padding-bottom: 90px; }
         
-        /* UI TOPO */
-        .top-ui { position: absolute; top: 15px; right: 15px; display: flex; gap: 10px; z-index: 200; }
+        /* UI TOPO & MENU KEBAB */
+        .top-ui { position: absolute; top: 15px; right: 15px; display: flex; gap: 15px; z-index: 200; align-items: center; }
         .timer { font-size: 1rem; font-weight: bold; border: 1px solid var(--blue); padding: 5px 12px; background: #000; box-shadow: var(--glow); }
-
-        /* MOLDURA */
-        .main-frame {
-            width: 100%; max-width: 500px; border: 2px solid #fff; padding: 20px; background: rgba(2, 8, 15, 0.95); position: relative; box-shadow: var(--glow);
+        
+        /* Ícone de 3 pontinhos (Kebab Menu) em CSS puro */
+        .kebab-btn {
+            width: 24px; height: 24px; position: relative; background: none; border: none; cursor: pointer;
+            display: flex; justify-content: center; align-items: center;
         }
-        .main-frame::before { content: ''; position: absolute; top: -2px; left: -2px; width: 12px; height: 12px; border-top: 4px solid #fff; border-left: 4px solid #fff; }
-        .main-frame::after { content: ''; position: absolute; bottom: -2px; right: -2px; width: 12px; height: 12px; border-bottom: 4px solid #fff; border-right: 4px solid #fff; }
+        .kebab-btn::before {
+            content: ''; width: 5px; height: 5px; background: var(--blue); border-radius: 50%;
+            box-shadow: 0 -8px 0 var(--blue), 0 8px 0 var(--blue);
+            filter: drop-shadow(0 0 2px var(--blue));
+        }
 
-        /* RANK E LEVEL */
-        .header-grid { display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: center; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 15px; }
-        .lvl-num { font-size: 3.5rem; font-weight: 700; text-shadow: 0 0 15px #fff; line-height: 1; }
-        .rank-badge { color: var(--blue); font-size: 1.5rem; font-weight: bold; border: 1px solid var(--blue); padding: 2px 10px; display: inline-block; margin-top: 5px; }
+        /* MOLDURA PRINCIPAL */
+        .main-frame {
+            width: 100%; max-width: 500px; border: 2px solid #fff; padding: 25px; background: rgba(2, 8, 15, 0.95); position: relative; box-shadow: var(--glow);
+        }
+        .main-frame::before { content: ''; position: absolute; top: -2px; left: -2px; width: 15px; height: 15px; border-top: 4px solid #fff; border-left: 4px solid #fff; }
+        .main-frame::after { content: ''; position: absolute; bottom: -2px; right: -2px; width: 15px; height: 15px; border-bottom: 4px solid #fff; border-right: 4px solid #fff; }
+
+        /* HEADER (Level, Job, Title, Rank) */
+        .header-grid { display: grid; grid-template-columns: auto 1fr; gap: 25px; align-items: start; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 20px; margin-bottom: 20px; }
+        .lvl-box { text-align: center; }
+        .lvl-num { font-size: 4rem; font-weight: 700; text-shadow: 0 0 15px #fff; line-height: 0.9; }
+        .lvl-txt { font-size: 0.8rem; letter-spacing: 3px; margin-top: 5px; color: var(--blue); }
+        .info-box { display: flex; flex-direction: column; gap: 8px; }
+        .info-row span:first-child { color: #aaa; font-size: 0.9rem; margin-right: 10px; }
+        .info-val { color: var(--blue); font-weight: bold; letter-spacing: 1px; }
+        .rank-badge { border: 1px solid var(--blue); padding: 2px 8px; display: inline-block; }
 
         /* XP BAR */
-        .xp-container { width: 100%; height: 6px; background: rgba(255,255,255,0.1); margin-top: 10px; position: relative; border-radius: 3px; overflow: hidden; }
+        .xp-container { width: 100%; height: 4px; background: rgba(255,255,255,0.1); margin-top: 15px; position: relative; }
         .xp-bar { height: 100%; background: #fff; width: 0%; box-shadow: 0 0 10px #fff; transition: width 0.5s ease; }
 
-        /* ATRIBUTOS MINIMALISTAS */
-        .stats-layout { display: flex; justify-content: space-between; position: relative; margin-top: 20px; }
-        .col { width: 48%; display: flex; flex-direction: column; gap: 15px; }
-        .stat-row { display: flex; align-items: center; }
-        .stat-icon { width: 20px; height: 20px; margin-right: 12px; fill: var(--blue); opacity: 0.9; }
-        .stat-label { font-size: 0.9rem; letter-spacing: 1px; color: #aaa; }
-        .stat-val { font-size: 1.4rem; font-weight: 700; margin-left: auto; color: #fff; text-shadow: 0 0 5px var(--blue); }
-        .plus { width: 20px; height: 20px; border: 1px solid #fff; margin-left: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; }
+        /* LISTA DE STATUS LIMPA (Sem Ícones) */
+        .stats-list { display: flex; flex-direction: column; gap: 12px; margin-top: 25px; position: relative; }
+        .stat-row { display: flex; align-items: center; border-bottom: 1px solid rgba(0,234,255,0.1); padding-bottom: 8px; }
+        .stat-label { font-size: 1.3rem; font-weight: 600; letter-spacing: 1px; color: #ccc; width: 60px; /* Largura fixa para alinhar */ }
+        .stat-val { font-size: 1.6rem; font-weight: 700; margin-left: 15px; color: #fff; text-shadow: 0 0 8px var(--blue); }
+        .plus-btn { 
+            width: 24px; height: 24px; border: 1px solid var(--blue); margin-left: auto; /* Empurra para a direita */
+            cursor: pointer; display: flex; align-items: center; justify-content: center; 
+            font-size: 1rem; font-weight: bold; background: rgba(0, 234, 255, 0.1); color: var(--blue);
+        }
 
-        .points-box { position: absolute; bottom: -5px; right: 0; text-align: right; }
-        .points-val { font-size: 2.2rem; font-weight: 700; text-shadow: 0 0 15px var(--blue); }
+        /* PONTOS */
+        .points-box { position: absolute; bottom: -15px; right: 0; text-align: right; }
+        .points-lbl { font-size: 0.7rem; color: #aaa; letter-spacing: 1px; }
+        .points-val { font-size: 2.5rem; font-weight: 700; text-shadow: 0 0 15px var(--blue); line-height: 1; }
 
-        /* NAV */
-        .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #000; border-top: 1px solid #fff; display: flex; justify-content: space-around; padding: 15px 0; z-index: 1000;}
-        .nav-btn { background: none; border: none; color: #444; font-weight: bold; font-family: inherit; font-size: 0.8rem; letter-spacing: 1px;}
-        .nav-btn.active { color: #fff; text-shadow: var(--glow); }
-
-        .content { display: none; }
-        .content.active { display: block; }
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 2000; }
+        /* GERAL */
+        h2 { text-align: center; letter-spacing: 5px; text-shadow: 0 0 10px var(--blue); margin-bottom: 25px; font-size: 1.8rem; }
+        .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #02050a; border-top: 2px solid #fff; display: flex; justify-content: space-around; padding: 15px 0; z-index: 100; box-shadow: 0 -5px 15px rgba(0,234,255,0.2); }
+        .nav-btn { background: none; border: none; color: #555; font-family: inherit; font-size: 0.9rem; font-weight: bold; letter-spacing: 2px; }
+        .nav-btn.active { color: #fff; text-shadow: var(--glow); transform: scale(1.1); transition: 0.3s; }
+        .content { display: none; } .content.active { display: block; }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; display: none; justify-content: center; align-items: center; }
         
-        /* SHOP E INV */
-        .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .shop-item { border: 1px solid var(--blue); padding: 10px; text-align: center; background: rgba(0,0,0,0.5); cursor: pointer; }
-        .inv-empty { color: #555; font-style: italic; text-align: center; margin-top: 20px; }
-        .item-card { border-left: 3px solid var(--blue); background: rgba(255,255,255,0.05); padding: 10px; margin-bottom: 5px; font-size: 0.9rem; }
+        /* SHOP EXPANDIDO */
+        .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+        .shop-item { border: 1px solid var(--blue); padding: 15px; text-align: center; background: rgba(0,0,0,0.6); cursor: pointer; transition: 0.2s; }
+        .shop-item:active { background: var(--blue); color: #000; }
+        .shop-name { font-weight: bold; margin-bottom: 5px; }
+        .shop-cost { color: orange; font-size: 0.9rem; }
+        .quest-item { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #333; align-items: center; }
+        .inv-empty { color: #666; font-style: italic; text-align: center; margin-top: 20px; }
+        .item-card { border: 1px solid var(--blue); background: rgba(0,234,255,0.1); padding: 10px; margin-bottom: 8px; font-size: 0.9rem; }
     </style>
 </head>
 <body id="b">
 
     <div class="top-ui">
         <div id="timer" class="timer">00:00:00</div>
-        <button onclick="document.getElementById('m').style.display='flex'" style="background:none; border:none; color:#fff; font-size:1.5rem; cursor:pointer;">⚙️</button>
+        <button class="kebab-btn" onclick="ui.toggleSettings()"></button>
     </div>
 
     <div id="m" class="modal">
-        <div style="background:#050a15; border:2px solid var(--blue); padding:30px; width:85%; text-align:center;">
+        <div style="background:#050a15; border:2px solid var(--blue); padding:30px; width:85%; max-width:400px; text-align:center;">
             <h2 id="t-settings">SETTINGS</h2>
-            <select id="lang" onchange="game.setLang(this.value)" style="width:100%; padding:12px; background:#000; color:#fff; border:1px solid var(--blue); margin: 20px 0;">
+            <select id="lang" onchange="game.setLang(this.value)" style="width:100%; padding:12px; background:#000; color:#fff; border:1px solid var(--blue); margin: 25px 0; font-family:inherit;">
                 <option value="en">English</option>
                 <option value="pt">Português</option>
                 <option value="es">Español</option>
                 <option value="zh">中文</option>
                 <option value="ja">日本語</option>
             </select>
-            <button onclick="game.reset()" style="width:100%; padding:10px; border:1px solid red; color:red; background:none; margin-bottom:10px; cursor:pointer;">RESET PROGRESS</button>
-            <button onclick="document.getElementById('m').style.display='none'" style="width:100%; padding:10px; cursor:pointer;">CLOSE</button>
+            <button onclick="game.reset()" style="width:100%; padding:15px; border:1px solid red; color:red; background:transparent; margin-bottom:10px; cursor:pointer; font-weight:bold;">RESET PROGRESS</button>
+            <button onclick="ui.toggleSettings()" style="width:100%; padding:15px; background:var(--blue); color:#000; border:none; font-weight:bold; cursor:pointer;">CLOSE</button>
         </div>
     </div>
 
@@ -85,46 +108,43 @@
         <div class="main-frame">
             <h2 id="txt-status">STATUS</h2>
             <div class="header-grid">
-                <div style="text-align:center;">
+                <div class="lvl-box">
                     <div id="val-lvl" class="lvl-num">1</div>
-                    <div style="font-size:0.7rem; letter-spacing:2px;">LEVEL</div>
+                    <div class="lvl-txt">LEVEL</div>
                 </div>
-                <div style="padding-left:15px;">
-                    <div>RANK: <span id="val-rank" class="rank-badge">E</span></div>
-                    <div style="margin-top:8px; font-size:0.9rem;">JOB: <span id="val-job" style="color:var(--blue);">NONE</span></div>
+                <div class="info-box">
+                    <div class="info-row"><span>RANK:</span> <span id="val-rank" class="info-val rank-badge">E</span></div>
+                    <div class="info-row"><span>JOB:</span> <span id="val-job" class="info-val">NONE</span></div>
+                    <div class="info-row"><span>TITLE:</span> <span id="val-title" class="info-val">NONE</span></div>
                     <div class="xp-container"><div id="xp-bar" class="xp-bar"></div></div>
                 </div>
             </div>
 
-            <div class="stats-layout">
-                <div class="col">
-                    <div class="stat-row">
-                        <svg class="stat-icon" viewBox="0 0 24 24"><path d="M21 6h-2v2h2v-2zm-2 2h-2v2h2v-2zm-2 2h-2v2h2v-2zm-2 2h-2v2h2v-2zM7 6h2v2h-2v-2zm2 2h2v2h-2v-2zm2 2h2v2h-2v-2zm2 2h2v2h-2v-2zM3 18h18v2h-18v-2z"/></svg>
-                        <span class="stat-label">STR</span><span id="val-STR" class="stat-val">10</span><div class="plus" onclick="game.add('STR')">+</div>
-                    </div>
-                    <div class="stat-row">
-                        <svg class="stat-icon" viewBox="0 0 24 24"><path d="M12 2l-4 4h8l-4-4zm-4 7l-4 4 4 4 4-4-4-4zm8 0l-4 4 4 4 4-4-4-4zM12 22l4-4h-8l4 4z"/></svg>
-                        <span class="stat-label">AGI</span><span id="val-AGI" class="stat-val">10</span><div class="plus" onclick="game.add('AGI')">+</div>
-                    </div>
-                    <div class="stat-row">
-                        <svg class="stat-icon" viewBox="0 0 24 24"><path d="M12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm0-7c-5.52 0-10 4.48-10 10s4.48 10 10 10 10-4.48 10-10-4.48-10-10-10zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
-                        <span class="stat-label">PER</span><span id="val-PER" class="stat-val">10</span><div class="plus" onclick="game.add('PER')">+</div>
-                    </div>
+            <div class="stats-list">
+                <div class="stat-row">
+                    <span class="stat-label">STR</span> <span id="val-STR" class="stat-val">10</span> <div class="plus-btn" onclick="game.add('STR')">+</div>
                 </div>
-                <div class="col">
-                    <div class="stat-row">
-                        <svg class="stat-icon" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32c-5.15-4.67-8.55-7.75-8.55-11.53 0-3.08 2.42-5.5 5.5-5.5 1.74 0 3.41.81 4.5 2.09 1.09-1.28 2.76-2.09 4.5-2.09 3.08 0 5.5 2.42 5.5 5.5 0 3.78-3.4 6.86-8.55 11.54l-1.45 1.31z"/></svg>
-                        <span class="stat-label">VIT</span><span id="val-VIT" class="stat-val">10</span><div class="plus" onclick="game.add('VIT')">+</div>
-                    </div>
-                    <div class="stat-row">
-                        <svg class="stat-icon" viewBox="0 0 24 24"><path d="M12 2c-5.52 0-10 4.48-10 10s4.48 10 10 10 10-4.48 10-10-4.48-10-10-10zm1 15h-2v-6h2v6zm0-8h-2v-2h2v2z"/></svg>
-                        <span class="stat-label">INT</span><span id="val-INT" class="stat-val">10</span><div class="plus" onclick="game.add('INT')">+</div>
-                    </div>
-                    <div class="points-box">
-                        <div id="txt-pts" style="font-size:0.6rem; color:#aaa;">POINTS</div>
-                        <div id="val-pts" class="points-val">0</div>
-                    </div>
+                <div class="stat-row">
+                    <span class="stat-label">VIT</span> <span id="val-VIT" class="stat-val">10</span> <div class="plus-btn" onclick="game.add('VIT')">+</div>
                 </div>
+                <div class="stat-row">
+                    <span class="stat-label">AGI</span> <span id="val-AGI" class="stat-val">10</span> <div class="plus-btn" onclick="game.add('AGI')">+</div>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">INT</span> <span id="val-INT" class="stat-val">10</span> <div class="plus-btn" onclick="game.add('INT')">+</div>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">PER</span> <span id="val-PER" class="stat-val">10</span> <div class="plus-btn" onclick="game.add('PER')">+</div>
+                </div>
+                
+                <div class="points-box">
+                    <div id="txt-pts" class="points-lbl">POINTS AVAILABLE</div>
+                    <div id="val-pts" class="points-val">0</div>
+                </div>
+            </div>
+
+            <div style="margin-top:30px; text-align:right; font-size:0.9rem; color:orange; border-top:1px solid rgba(255,255,255,0.1); padding-top:15px;">
+                GOLD: <span id="val-gold" style="color:#fff; font-weight:bold;">0</span>
             </div>
         </div>
     </div>
@@ -138,12 +158,25 @@
 
     <div id="tab-shop" class="content">
         <div class="main-frame">
-            <h2 id="txt-shop">SHOP & ITEMS</h2>
+            <h2 id="txt-shop">SHOP</h2>
             <div class="shop-grid">
-                <div class="shop-item" onclick="game.buy('Focus Elixir (Coffee)', 50)">FOCUS ELIXIR<br><span style="color:var(--blue);font-size:0.7rem">50G</span></div>
-                <div class="shop-item" onclick="game.buy('Recovery Pill', 100)">RECOVERY PILL<br><span style="color:var(--blue);font-size:0.7rem">100G</span></div>
+                <div class="shop-item" onclick="game.buy('Bandage', 30)">
+                    <div class="shop-name">BANDAGE</div><div class="shop-cost">30 G</div>
+                </div>
+                <div class="shop-item" onclick="game.buy('Water Bottle', 10)">
+                    <div class="shop-name">WATER BOTTLE</div><div class="shop-cost">10 G</div>
+                </div>
+                <div class="shop-item" onclick="game.buy('Potion (Low)', 100)">
+                    <div class="shop-name">POTION (LOW)</div><div class="shop-cost">100 G</div>
+                </div>
+                <div class="shop-item" onclick="game.buy('Return Stone', 200)">
+                    <div class="shop-name">RETURN STONE</div><div class="shop-cost">200 G</div>
+                </div>
+                <div class="shop-item" style="grid-column:span 2; border-color:orange;" onclick="game.buy('Basic Dagger (E-Rank)', 1000)">
+                    <div class="shop-name" style="color:orange">BASIC DAGGER (E-RANK)</div><div class="shop-cost">1000 G</div>
+                </div>
             </div>
-            <h3 style="margin-top:20px; border-bottom:1px solid #333; font-size:1rem" id="txt-inv-title">INVENTORY</h3>
+            <h3 style="margin-top:25px; border-bottom:1px solid #333; padding-bottom:5px;" id="txt-inv">INVENTORY</h3>
             <div id="inv-list"></div>
         </div>
     </div>
@@ -156,29 +189,28 @@
 
     <script>
         const trans = {
-            en: { status: "STATUS", quests: "QUESTS", shop: "SHOP", pts: "POINTS", inv: "INVENTORY", empty: "Inventory Empty", q1: "Push-ups", q2: "Sit-ups", q3: "Squats", q4: "2km Run", job: "None" },
-            pt: { status: "STATUS", quests: "MISSÕES", shop: "LOJA", pts: "PONTOS", inv: "INVENTÁRIO", empty: "Inventário Vazio", q1: "Flexões", q2: "Abdominais", q3: "Agachamentos", q4: "Correr 2km", job: "Nenhum" },
-            es: { status: "ESTADO", quests: "MISIONES", shop: "TIENDA", pts: "PUNTOS", inv: "INVENTARIO", empty: "Inventario Vacío", q1: "Flexiones", q2: "Abdominales", q3: "Sentadillas", q4: "Correr 2km", job: "Ninguno" },
-            ja: { status: "ステータス", quests: "クエスト", shop: "ショップ", pts: "ポイント", inv: "インベントリ", empty: "インベントリが空です", q1: "腕立て伏せ", q2: "腹筋", q3: "スクワット", q4: "2km走", job: "なし" },
-            zh: { status: "状态", quests: "任务", shop: "商店", pts: "点数", inv: "仓库", empty: "仓库空空如也", q1: "俯卧撑", q2: "仰卧起坐", q3: "深蹲", q4: "跑步2公里", job: "无" }
+            en: { status: "STATUS", quests: "DAILY QUESTS", shop: "SHOP", pts: "POINTS AVAILABLE", settings: "SETTINGS", inv: "INVENTORY", empty: "Empty Inventory", q1: "Push-ups", q2: "Sit-ups", q3: "Squats", q4: "2km Run", job: "None", title: "None" },
+            pt: { status: "STATUS", quests: "MISSÕES DIÁRIAS", shop: "LOJA", pts: "PONTOS DISPONÍVEIS", settings: "CONFIGURAÇÕES", inv: "INVENTÁRIO", empty: "Inventário Vazio", q1: "Flexões", q2: "Abdominais", q3: "Agachamentos", q4: "Corrida 2km", job: "Nenhum", title: "Nenhum" },
+            es: { status: "ESTADO", quests: "MISIONES DIARIAS", shop: "TIENDA", pts: "PUNTOS DISPONIBLES", settings: "AJUSTES", inv: "INVENTARIO", empty: "Inventario Vacío", q1: "Flexiones", q2: "Abdominales", q3: "Sentadillas", q4: "Carrera 2km", job: "Ninguno", title: "Ninguno" },
+            ja: { status: "ステータス", quests: "デイリークエスト", shop: "ショップ", pts: "利用可能ポイント", settings: "設定", inv: "インベントリ", empty: "インベントリが空です", q1: "腕立て伏せ", q2: "腹筋", q3: "スクワット", q4: "2km走", job: "なし", title: "なし" },
+            zh: { status: "状态", quests: "每日任务", shop: "商店", pts: "可用点数", settings: "设置", inv: "仓库", empty: "仓库空空如也", q1: "俯卧撑", q2: "仰卧起坐", q3: "深蹲", q4: "跑步2公里", job: "无", title: "无" }
         };
 
         const game = {
             data: { 
                 stats: { STR: 10, VIT: 10, AGI: 10, INT: 10, PER: 10 }, 
-                pts: 3, lvl: 1, gold: 0, xp: 0, lang: 'en', 
-                inventory: [],
-                quests: [{id:'q1', done:false}, {id:'q2', done:false}, {id:'q3', done:false}, {id:'q4', done:false}] 
+                pts: 3, lvl: 1, gold: 0, xp: 0, lang: 'en', inventory: [],
+                quests: [{id:'q1', count:20, done:false}, {id:'q2', count:20, done:false}, {id:'q3', count:20, done:false}, {id:'q4', count:1, done:false}] 
             },
             init() {
-                const s = localStorage.getItem('solo_v13');
+                const s = localStorage.getItem('solo_v14');
                 if(s) this.data = JSON.parse(s);
                 ui.render();
                 setInterval(() => this.tick(), 1000);
             },
-            save() { localStorage.setItem('solo_v13', JSON.stringify(this.data)); },
+            save() { localStorage.setItem('solo_v14', JSON.stringify(this.data)); },
             setLang(l) { this.data.lang = l; this.save(); ui.render(); },
-            reset() { if(confirm("RESET ALL?")) { localStorage.removeItem('solo_v13'); location.reload(); } },
+            reset() { if(confirm("RESET ALL PROGRESS?")) { localStorage.removeItem('solo_v14'); location.reload(); } },
             add(k) { if(this.data.pts > 0) { this.data.stats[k]++; this.data.pts--; this.save(); ui.render(); } },
             tick() {
                 const n = new Date(); const e = new Date(); e.setHours(23,59,59);
@@ -188,28 +220,12 @@
             },
             toggle(i) { 
                 const q = this.data.quests[i];
-                if(!q.done) {
-                    q.done = true;
-                    this.data.xp += 25;
-                    this.data.gold += 10;
-                    if(this.data.xp >= 100) {
-                        this.data.xp = 0;
-                        this.data.lvl++;
-                        this.data.pts += 3;
-                    }
-                } else {
-                    q.done = false;
-                    this.data.xp -= 25;
-                    this.data.gold -= 10;
-                }
+                if(!q.done) { q.done = true; this.data.xp += 25; this.data.gold += 15; if(this.data.xp >= 100) { this.data.xp = 0; this.data.lvl++; this.data.pts += 3; } } 
+                else { q.done = false; this.data.xp -= 25; this.data.gold -= 15; }
                 this.save(); ui.render(); 
             },
             buy(n, c) {
-                if(this.data.gold >= c) {
-                    this.data.gold -= c;
-                    this.data.inventory.push(n);
-                    this.save(); ui.render();
-                }
+                if(this.data.gold >= c) { this.data.gold -= c; this.data.inventory.push(n); this.save(); ui.render(); }
             }
         };
 
@@ -221,14 +237,7 @@
                 document.getElementById('n-' + n).classList.add('active');
             },
             toggleSettings() { document.getElementById('m').style.display = 'flex'; },
-            getRank(lvl) {
-                if(lvl < 5) return 'E';
-                if(lvl < 15) return 'D';
-                if(lvl < 30) return 'C';
-                if(lvl < 50) return 'B';
-                if(lvl < 80) return 'A';
-                return 'S';
-            },
+            getRank(l) { if(l<10) return 'E'; if(l<20) return 'D'; if(l<40) return 'C'; if(l<60) return 'B'; if(l<80) return 'A'; return 'S'; },
             render() {
                 const d = game.data; const t = trans[d.lang];
                 document.getElementById('txt-status').innerText = t.status;
@@ -237,14 +246,19 @@
                 document.getElementById('n-status').innerText = t.status;
                 document.getElementById('n-quests').innerText = t.quests;
                 document.getElementById('n-shop').innerText = t.shop;
+                document.getElementById('t-settings').innerText = t.settings;
+                document.getElementById('txt-pts').innerText = t.pts;
+                document.getElementById('txt-inv').innerText = t.inv;
+
                 document.getElementById('val-lvl').innerText = d.lvl;
                 document.getElementById('val-pts').innerText = d.pts;
-                document.getElementById('txt-pts').innerText = t.pts;
-                document.getElementById('txt-inv-title').innerText = t.inv;
+                document.getElementById('val-gold').innerText = d.gold;
                 document.getElementById('val-job').innerText = t.job;
+                document.getElementById('val-title').innerText = t.title;
                 document.getElementById('val-rank').innerText = this.getRank(d.lvl);
                 document.getElementById('xp-bar').style.width = d.xp + "%";
-                
+                document.getElementById('lang').value = d.lang;
+
                 if(['zh','ja'].includes(d.lang)) document.getElementById('b').classList.add('lang-cjk');
                 else document.getElementById('b').classList.remove('lang-cjk');
 
@@ -252,18 +266,15 @@
                 
                 const qL = document.getElementById('q-list'); qL.innerHTML = '';
                 d.quests.forEach((q, i) => {
-                    qL.innerHTML += `<div style="display:flex; justify-content:space-between; padding:15px; border-bottom:1px solid #333;">
-                        <span style="${q.done?'text-decoration:line-through;color:#555':''}">${t[q.id]}</span>
+                    qL.innerHTML += `<div class="quest-item">
+                        <span style="${q.done?'text-decoration:line-through;color:#666':''}">${t[q.id]} [${q.count}]</span>
                         <input type="checkbox" onchange="game.toggle(${i})" ${q.done?'checked':''}>
                     </div>`;
                 });
 
                 const iL = document.getElementById('inv-list');
-                if(d.inventory.length === 0) {
-                    iL.innerHTML = `<div class="inv-empty">${t.empty}</div>`;
-                } else {
-                    iL.innerHTML = d.inventory.map(item => `<div class="item-card">${item}</div>`).join('');
-                }
+                if(d.inventory.length === 0) iL.innerHTML = `<div class="inv-empty">${t.empty}</div>`;
+                else iL.innerHTML = d.inventory.map(item => `<div class="item-card">${item}</div>`).join('');
             }
         };
         game.init();
