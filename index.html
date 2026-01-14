@@ -7,7 +7,7 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#050a15">
     <link rel="icon" type="image/png" href="icon.png">
-    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Noto+Sans+JP&family=Noto+Sans+KR&family=Noto+Sans+SC&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Noto+Sans+SC&family=Noto+Sans+JP&family=Noto+Sans+KR&display=swap" rel="stylesheet">
     <style>
         :root {
             --neon-blue: #00eaff;
@@ -16,12 +16,14 @@
             --font-main: 'Chakra Petch', sans-serif;
         }
 
-        body.lang-cjk { font-family: 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans SC', sans-serif !important; }
+        /* Suporte para fontes asiáticas */
+        body.lang-cjk { font-family: 'Noto Sans SC', 'Noto Sans JP', 'Noto Sans KR', sans-serif !important; }
+        
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; outline: none; }
 
         body {
             background-color: var(--bg-dark);
-            background-image: linear-gradient(rgba(0, 234, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 234, 255, 0.02) 1px, transparent 1px);
+            background-image: linear-gradient(rgba(0, 234, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 234, 255, 0.03) 1px, transparent 1px);
             background-size: 30px 30px;
             color: #fff;
             font-family: var(--font-main);
@@ -44,7 +46,6 @@
             background: rgba(2, 8, 15, 0.9);
             position: relative;
         }
-        /* Cantos Brancos */
         .main-frame::before { content: ''; position: absolute; top: -2px; left: -2px; width: 12px; height: 12px; border-top: 4px solid #fff; border-left: 4px solid #fff; }
         .main-frame::after { content: ''; position: absolute; bottom: -2px; right: -2px; width: 12px; height: 12px; border-bottom: 4px solid #fff; border-right: 4px solid #fff; }
 
@@ -64,15 +65,13 @@
         .bar-fill { height: 100%; background: #fff; width: 100%; box-shadow: 0 0 10px #fff; border-radius: 2px; transition: width 0.5s; }
         .bar-nums { font-size: 0.7rem; text-align: right; margin-top: 3px; color: #ccc; }
 
-        /* ATRIBUTOS (LAYOUT DA IMAGEM 22222222222.png) */
+        /* ATRIBUTOS (ICONS FIÉIS) */
         .stats-layout { display: flex; justify-content: space-between; position: relative; }
         .col-left { width: 48%; display: flex; flex-direction: column; gap: 20px; }
         .col-right { width: 48%; display: flex; flex-direction: column; gap: 20px; }
         
         .stat-row { display: flex; align-items: center; }
-        
-        /* ÍCONES SVG PERSONALIZADOS */
-        .stat-icon { width: 28px; height: 28px; margin-right: 10px; fill: #fff; filter: drop-shadow(0 0 5px var(--neon-blue)); }
+        .stat-icon { width: 30px; height: 30px; margin-right: 12px; fill: var(--neon-blue); filter: drop-shadow(0 0 5px var(--neon-blue)); }
         
         .stat-name { font-size: 1.3rem; font-weight: 600; color: #fff; margin-right: 10px; text-shadow: 0 0 5px var(--neon-blue); letter-spacing: 1px; }
         .stat-val { font-size: 1.8rem; font-weight: 700; color: #fff; text-shadow: 0 0 10px #fff; }
@@ -84,33 +83,27 @@
             box-shadow: 0 0 5px #fff; cursor: pointer;
         }
 
-        /* PONTOS DISPONÍVEIS (Canto Inferior Direito) */
+        /* PONTOS DISPONÍVEIS */
         .points-box { position: absolute; bottom: 0; right: 0; text-align: right; }
         .points-label { font-size: 0.8rem; color: #ccc; max-width: 80px; line-height: 1.1; display: inline-block; text-align: right; }
         .points-val { font-size: 3rem; font-weight: 700; color: #fff; text-shadow: 0 0 20px #fff; line-height: 0.8; display: inline-block; vertical-align: bottom; margin-left: 10px; }
 
-        /* QUESTS & LOJA */
+        /* OUTROS */
         .quest-item { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.2); padding: 15px 0; align-items: center; }
         .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
         .shop-item { border: 1px solid var(--neon-blue); padding: 15px; text-align: center; background: rgba(0,0,0,0.5); cursor: pointer; box-shadow: inset 0 0 10px rgba(0, 234, 255, 0.1); }
-        
-        /* NAV */
         .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #02050a; border-top: 2px solid #fff; display: flex; justify-content: space-around; padding: 15px 0; z-index: 100; box-shadow: 0 -5px 20px rgba(0, 234, 255, 0.3); }
         .nav-btn { background: none; border: none; color: #777; font-family: inherit; font-size: 1rem; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; }
         .nav-btn.active { color: #fff; text-shadow: 0 0 10px #fff, 0 0 20px var(--neon-blue); }
-
-        /* MODAL */
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; display: none; justify-content: center; align-items: center; flex-direction: column; }
         .modal.open { display: flex; }
         .modal-box { background: #050a15; border: 2px solid var(--neon-blue); padding: 30px; width: 85%; max-width: 400px; text-align: center; box-shadow: 0 0 20px var(--neon-blue); }
         select { width: 100%; padding: 10px; background: #000; color: #fff; border: 1px solid var(--neon-blue); margin-bottom: 15px; }
-
         .content-section { display: none; width: 100%; animation: fadeUp 0.4s ease; }
         .content-section.active { display: block; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* NOTIFICAÇÃO */
         #notification { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0, 10, 20, 0.95); border: 2px solid #fff; color: #fff; padding: 20px 40px; z-index: 2000; display: none; text-align: center; box-shadow: 0 0 30px var(--neon-blue); font-size: 1.2rem; font-weight: bold; letter-spacing: 1px; }
+
     </style>
 </head>
 <body>
@@ -124,16 +117,17 @@
 
     <div id="settings-modal" class="modal">
         <div class="modal-box">
-            <h2 style="font-size:1.5rem; margin-bottom:20px;">SETTINGS</h2>
+            <h2 id="txt-settings" style="font-size:1.5rem; margin-bottom:20px;">SETTINGS</h2>
             <select id="lang-select" onchange="game.setLang(this.value)">
                 <option value="en">English</option>
                 <option value="pt">Português</option>
                 <option value="es">Español</option>
                 <option value="ja">日本語 (Japanese)</option>
+                <option value="zh">中文 (Chinese)</option>
                 <option value="ko">한국어 (Korean)</option>
             </select>
-            <button onclick="game.hardReset()" style="width:100%; padding:15px; background:transparent; border:1px solid red; color:red; font-weight:bold; cursor:pointer; margin-bottom:10px;">RESET SYSTEM</button>
-            <button onclick="ui.toggleSettings()" style="width:100%; padding:15px; background:#fff; border:none; color:#000; font-weight:bold; cursor:pointer;">CLOSE</button>
+            <button onclick="game.hardReset()" id="btn-reset" style="width:100%; padding:15px; background:transparent; border:1px solid red; color:red; font-weight:bold; cursor:pointer; margin-bottom:10px;">RESET SYSTEM</button>
+            <button onclick="ui.toggleSettings()" id="btn-close" style="width:100%; padding:15px; background:#fff; border:none; color:#000; font-weight:bold; cursor:pointer;">CLOSE</button>
         </div>
     </div>
 
@@ -148,7 +142,7 @@
 
     <div id="tab-status" class="content-section active">
         <div class="main-frame">
-            <h2>STATUS</h2>
+            <h2 id="txt-status">STATUS</h2>
             
             <div class="header-grid">
                 <div style="text-align:center;">
@@ -156,8 +150,8 @@
                     <div class="label-text" style="color:#fff; text-shadow:0 0 5px #fff;">LEVEL</div>
                 </div>
                 <div>
-                    <div style="display:flex; margin-bottom:10px;"><span class="label-text" style="width:50px;">JOB:</span> <span id="val-job" class="val-text">NONE</span></div>
-                    <div style="display:flex;"><span class="label-text" style="width:50px;">TITLE:</span> <span id="val-title" class="val-text">NONE</span></div>
+                    <div style="display:flex; margin-bottom:10px;"><span id="lbl-job" class="label-text" style="width:50px;">JOB:</span> <span id="val-job" class="val-text">NONE</span></div>
+                    <div style="display:flex;"><span id="lbl-title" class="label-text" style="width:50px;">TITLE:</span> <span id="val-title" class="val-text">NONE</span></div>
                 </div>
             </div>
 
@@ -181,11 +175,11 @@
             <div class="stats-layout">
                 <div class="col-left">
                     <div class="stat-row">
-                        <svg class="stat-icon" viewBox="0 0 24 24"><path d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22 14.86 20.57 16.29 22 18.43 19.86 19.86 21.29 21.29 19.86l-1.43-1.43 1.43-1.43-1.43-1.43zM10 10.43l4.57 4.57-1.43 1.43L8.57 11.86 10 10.43z"/></svg>
+                        <svg class="stat-icon" viewBox="0 0 24 24"><path d="M22 17.5v-2h-2v2h2zm-2 2h2v-2h-2v2zm-2-2h-2v2h2v-2zm-2 2h2v-2h-2v2zM6 9c0-1.66 1.34-3 3-3s3 1.34 3 3-1.34 3-3 3-3-1.34-3-3zm9.15 4.32l-.65-2.61c-.2-.79-1-1.28-1.78-1.07l-3.31.83c-.35.09-.67.27-.92.53L5.68 14H2v2h3.5l2.45-1.45 1.57 2.4-4.52 1.63V22h2.2l6.23-2.34c.79-.3 1.36-1.01 1.48-1.85l.48-3.41c.07-.46-.08-.93-.41-1.28z"/></svg>
                         <span class="stat-name">STR:</span> <span id="val-STR" class="stat-val">10</span> <div class="plus-btn" onclick="game.addStat('STR')">+</div>
                     </div>
                     <div class="stat-row">
-                        <svg class="stat-icon" viewBox="0 0 24 24"><path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM9.8 8.9L7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3C14.8 12 16.8 13 19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1L6 8.3V13h2V9.6l1.8-.7z"/><path d="M2 9v2h3V9H2zm-2 4v2h5v-2H0z"/></svg>
+                        <svg class="stat-icon" viewBox="0 0 24 24"><path d="M19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1L6 8.3V13h2V9.6l1.8-.7L7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3C14.8 12 16.8 13 19 13z"/></svg>
                         <span class="stat-name">AGI:</span> <span id="val-AGI" class="stat-val">10</span> <div class="plus-btn" onclick="game.addStat('AGI')">+</div>
                     </div>
                     <div class="stat-row">
@@ -196,7 +190,7 @@
 
                 <div class="col-right">
                     <div class="stat-row">
-                        <svg class="stat-icon" viewBox="0 0 24 24"><path d="M11.5 20.57c-.16-.27-6-10.27-6-13.07C5.5 5 7.5 3 9.75 3c1.39 0 2.61.73 3.32 1.83C13.89 3.73 15.11 3 16.5 3c2.25 0 4.25 2 4.25 4.5 0 2.8-5.84 12.8-6 13.07L13.13 23h-2.25z M13 7h-2v4h-2l4 5v-4h2l-4-5z"/></svg>
+                        <svg class="stat-icon" viewBox="0 0 24 24"><path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3zm0 16c-3.03-.99-5-4.22-5-7.5V6.8l5-1.88 5 1.88v6.72c0 3.28-1.97 6.51-5 7.5z"/></svg>
                         <span class="stat-name">VIT:</span> <span id="val-VIT" class="stat-val">10</span> <div class="plus-btn" onclick="game.addStat('VIT')">+</div>
                     </div>
                     <div class="stat-row">
@@ -219,7 +213,7 @@
 
     <div id="tab-quests" class="content-section">
         <div class="main-frame">
-            <h2>DAILY QUESTS</h2>
+            <h2 id="txt-quests-title">DAILY QUESTS</h2>
             <div id="quest-list"></div>
             <button id="btn-finish" onclick="game.finishDay()" style="width:100%; padding:15px; margin-top:20px; background:rgba(0, 234, 255, 0.1); border:1px solid #fff; color:#fff; font-weight:bold; cursor:pointer; letter-spacing:2px; box-shadow:0 0 10px var(--neon-blue);">[ REWARDS ]</button>
         </div>
@@ -227,14 +221,14 @@
 
     <div id="tab-shop" class="content-section">
         <div class="main-frame">
-            <h2 style="color:var(--gold); text-shadow:0 0 10px var(--gold);">SHOP</h2>
+            <h2 id="txt-shop" style="color:var(--gold); text-shadow:0 0 10px var(--gold);">SHOP</h2>
             <div class="shop-grid">
                 <div class="shop-item" onclick="game.buy('Return Stone', 200)"><div>RETURN STONE</div><div style="color:var(--gold)">200 G</div></div>
                 <div class="shop-item" onclick="game.buy('Potion', 100)"><div>POTION</div><div style="color:var(--gold)">100 G</div></div>
                 <div class="shop-item" onclick="game.buy('Chocolate', 50)"><div>CHOCOLATE</div><div style="color:var(--gold)">50 G</div></div>
                 <div class="shop-item" onclick="game.buy('Bandage', 30)"><div>BANDAGE</div><div style="color:var(--gold)">30 G</div></div>
             </div>
-            <h3 style="margin-top:20px; border-bottom:1px solid #333;">INVENTORY</h3>
+            <h3 id="txt-inv" style="margin-top:20px; border-bottom:1px solid #333;">INVENTORY</h3>
             <div id="inv-list" style="padding:10px; color:#888;">Empty</div>
         </div>
     </div>
@@ -249,7 +243,9 @@
         const translations = {
             en: { status: "STATUS", quests: "DAILY QUESTS", shop: "SHOP", job: "JOB:", title: "TITLE:", pts: "Available Ability Points:", settings: "SETTINGS", lang: "LANGUAGE", reset: "RESET SYSTEM", finish: "[ REWARDS ]", q_push: "PUSH-UPS", q_sit: "SIT-UPS", q_squat: "SQUATS", q_run: "RUNNING", q_water: "DRINK WATER", none: "NONE", job_necro: "NECROMANCER", job_monarch: "SHADOW MONARCH", t_wolf: "WOLF ASSASSIN", t_adversity: "ADVERSITY OVERCOMER" },
             pt: { status: "STATUS", quests: "MISSÕES", shop: "LOJA", job: "CLASSE:", title: "TÍTULO:", pts: "Pontos Disponíveis:", settings: "CONFIGURAÇÕES", lang: "IDIOMA", reset: "RESETAR SISTEMA", finish: "[ RECEBER ]", q_push: "FLEXÕES", q_sit: "ABDOMINAIS", q_squat: "AGACHAMENTOS", q_run: "CORRIDA", q_water: "BEBER ÁGUA", none: "NENHUM", job_necro: "NECROMANTE", job_monarch: "MONARCA DAS SOMBRAS", t_wolf: "ASSASSINO DE LOBOS", t_adversity: "AQUELE QUE SUPEROU ADVERSIDADE" },
-            ja: { status: "ステータス", quests: "クエスト", shop: "ショップ", job: "職業:", title: "称号:", pts: "能力ポイント:", settings: "設定", lang: "言語", reset: "システムリセット", finish: "[ 報酬を受け取る ]", q_push: "腕立て伏せ", q_sit: "腹筋", q_squat: "スクワット", q_run: "ランニング", q_water: "水を飲む", none: "なし", job_necro: "ネクロマンサー", job_monarch: "影の君主", t_wolf: "狼殺し", t_adversity: "逆境を乗り越えし者" }
+            ja: { status: "ステータス", quests: "クエスト", shop: "ショップ", job: "職業:", title: "称号:", pts: "能力ポイント:", settings: "設定", lang: "言語", reset: "システムリセット", finish: "[ 報酬を受け取る ]", q_push: "腕立て伏せ", q_sit: "腹筋", q_squat: "スクワット", q_run: "ランニング", q_water: "水を飲む", none: "なし", job_necro: "ネクロマンサー", job_monarch: "影の君主", t_wolf: "狼殺し", t_adversity: "逆境を乗り越えし者" },
+            zh: { status: "状态", quests: "每日任务", shop: "商店", job: "职业:", title: "称号:", pts: "可用能力点:", settings: "设置", lang: "语言", reset: "重置系统", finish: "[ 领取奖励 ]", q_push: "俯卧撑", q_sit: "仰卧起坐", q_squat: "深蹲", q_run: "跑步", q_water: "喝水", none: "无", job_necro: "亡灵法师", job_monarch: "暗影君主", t_wolf: "狼族杀手", t_adversity: "战胜逆境者" },
+            ko: { status: "상태", quests: "퀘스트", shop: "상점", job: "직업:", title: "칭호:", pts: "사용 가능한 능력치 포인트:", settings: "설정", lang: "언어", reset: "진행 초기화", finish: "[ 보상 받기 ]", q_push: "팔굽혀펴기", q_sit: "윗몸일으키기", q_squat: "스쿼트", q_run: "달리기", q_water: "물 마시기", none: "없음", job_necro: "네크로맨서", job_monarch: "그림자 군주", t_wolf: "늑대 학살자", t_adversity: "역경을 이겨낸 자" }
         };
 
         const game = {
@@ -263,7 +259,7 @@
             ], inventory: [] },
             
             init() {
-                const save = localStorage.getItem('sl_sys_v10');
+                const save = localStorage.getItem('sl_sys_v11');
                 if(save) this.data = JSON.parse(save);
                 document.getElementById('lang-select').value = this.data.lang;
                 if(['ja', 'zh', 'ko'].includes(this.data.lang)) document.body.classList.add('lang-cjk');
@@ -273,9 +269,9 @@
                 setInterval(() => this.clockLoop(), 1000);
             },
 
-            save() { localStorage.setItem('sl_sys_v10', JSON.stringify(this.data)); },
-            setLang(l) { this.data.lang = l; if(['ja', 'ko'].includes(l)) document.body.classList.add('lang-cjk'); else document.body.classList.remove('lang-cjk'); this.save(); ui.render(); },
-            hardReset() { if(confirm("RESET SYSTEM?")) { localStorage.removeItem('sl_sys_v10'); location.reload(); } },
+            save() { localStorage.setItem('sl_sys_v11', JSON.stringify(this.data)); },
+            setLang(l) { this.data.lang = l; if(['ja', 'zh', 'ko'].includes(l)) document.body.classList.add('lang-cjk'); else document.body.classList.remove('lang-cjk'); this.save(); ui.render(); },
+            hardReset() { if(confirm("RESET SYSTEM?")) { localStorage.removeItem('sl_sys_v11'); location.reload(); } },
             updateProfile() { const l = this.data.lvl; if (l < 40) this.data.job = 'none'; else if (l < 45) this.data.job = 'job_necro'; else this.data.job = 'job_monarch'; if (l < 10) this.data.title = 'none'; else if (l < 25) this.data.title = 't_wolf'; else this.data.title = 't_adversity'; },
             clockLoop() {
                 const now = new Date(); const end = new Date(); end.setHours(23, 59, 59, 999);
@@ -298,6 +294,8 @@
             render() {
                 const d = game.data; const t = translations[d.lang] || translations['en'];
                 document.getElementById('nav-status').innerText = t.status; document.getElementById('nav-quests').innerText = t.quests; document.getElementById('nav-shop').innerText = t.shop;
+                document.getElementById('txt-settings').innerText = t.settings; document.getElementById('btn-reset').innerText = t.reset; document.getElementById('btn-close').innerText = "CLOSE";
+                document.getElementById('txt-status').innerText = t.status; document.getElementById('txt-quests-title').innerText = t.quests; document.getElementById('txt-shop').innerText = t.shop;
                 document.getElementById('txt-pts').innerText = t.pts;
                 document.getElementById('val-lvl').innerText = d.lvl; document.getElementById('val-job').innerText = t[d.job]; document.getElementById('val-title').innerText = t[d.title];
                 for(let key in d.stats) document.getElementById('val-'+key).innerText = d.stats[key];
