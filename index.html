@@ -10,8 +10,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --neon-blue: #e6ffff; /* Cor do brilho principal */
+            --neon-blue: #e6ffff;
             --neon-glow: 0 0 10px var(--neon-blue), 0 0 20px rgba(0, 200, 255, 0.5);
+            --danger: #ff3333;
+            --gold: #ffaa00;
             --bg-dark: #050a15;
         }
 
@@ -19,193 +21,300 @@
 
         body {
             background-color: var(--bg-dark);
-            /* Textura de fundo holográfica gerada via CSS */
             background-image: 
-                radial-gradient(circle at 20% 30%, rgba(0, 100, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(0, 50, 150, 0.1) 0%, transparent 50%),
-                repeating-linear-gradient(45deg, rgba(0, 200, 255, 0.02) 0px, rgba(0, 200, 255, 0.02) 1px, transparent 1px, transparent 10px),
-                repeating-linear-gradient(-45deg, rgba(0, 200, 255, 0.02) 0px, rgba(0, 200, 255, 0.02) 1px, transparent 1px, transparent 10px);
-            background-size: 100% 100%, 100% 100%, 20px 20px, 20px 20px;
+                radial-gradient(circle at 50% 50%, rgba(0, 100, 255, 0.05) 0%, transparent 60%),
+                repeating-linear-gradient(45deg, rgba(0, 200, 255, 0.02) 0px, rgba(0, 200, 255, 0.02) 1px, transparent 1px, transparent 10px);
+            background-size: 100% 100%, 20px 20px;
             color: var(--neon-blue);
             font-family: 'Chakra Petch', sans-serif;
             min-height: 100vh;
-            display: flex; flex-direction: column; align-items: center; padding: 20px;
+            display: flex; flex-direction: column; align-items: center; padding: 15px; padding-bottom: 80px;
             text-shadow: var(--neon-glow);
             overflow-x: hidden;
+            transition: all 1s ease;
         }
 
-        /* ÍCONES SVG (Estilo Fiel) */
-        .icon { width: 30px; height: 30px; fill: var(--neon-blue); filter: drop-shadow(0 0 5px var(--neon-blue)); margin-right: 10px; }
-        .icon-sm { width: 24px; height: 24px; margin-right: 5px; }
+        /* MODO EMERGÊNCIA */
+        body.emergency {
+            --neon-blue: #ff3333;
+            --neon-glow: 0 0 10px red, 0 0 20px rgba(255, 0, 0, 0.5);
+        }
 
-        /* ESTRUTURA PRINCIPAL COM BORDA DUPLA BRILHANTE */
+        /* UTILS */
+        .icon { width: 28px; height: 28px; fill: var(--neon-blue); filter: drop-shadow(0 0 5px var(--neon-blue)); margin-right: 10px; }
+        .icon-sm { width: 22px; height: 22px; margin-right: 5px; fill: var(--neon-blue); filter: drop-shadow(0 0 5px var(--neon-blue)); }
+        
+        /* FRAMES */
         .main-frame {
             width: 100%; max-width: 600px;
             border-style: double; border-width: 4px; border-color: var(--neon-blue);
-            box-shadow: var(--neon-glow), inset 0 0 10px rgba(0, 200, 255, 0.2);
-            padding: 20px; margin-bottom: 20px;
-            background: rgba(0, 10, 30, 0.6);
-            backdrop-filter: blur(2px);
-            opacity: 0; animation: frameOpen 0.8s ease-out forwards;
+            box-shadow: var(--neon-glow), inset 0 0 20px rgba(0, 200, 255, 0.1);
+            padding: 15px; margin-bottom: 15px;
+            background: rgba(0, 10, 25, 0.7);
+            backdrop-filter: blur(4px);
+            opacity: 0; animation: frameOpen 0.6s ease-out forwards;
         }
-        @keyframes frameOpen { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes frameOpen { from { opacity: 0; transform: scaleY(0.1); } to { opacity: 1; transform: scaleY(1); } }
 
-        /* --- SEÇÃO SUPERIOR (HP/MP/FADIGA) --- */
-        .top-section { display: grid; grid-template-columns: 1fr 1fr auto; gap: 20px; align-items: center; }
+        /* TIMER NO TOPO */
+        .timer-display {
+            position: absolute; top: 10px; right: 15px;
+            font-family: 'Chakra Petch', monospace; font-size: 1rem; font-weight: bold;
+            border: 1px solid var(--neon-blue); padding: 2px 6px; background: rgba(0,0,0,0.8);
+            z-index: 10;
+        }
+
+        /* SEÇÃO SUPERIOR (Status) */
+        .top-section { display: grid; grid-template-columns: 1fr 1fr auto; gap: 15px; align-items: center; }
         .status-group { display: flex; flex-direction: column; }
-        .status-label { display: flex; align-items: center; font-weight: 600; margin-bottom: 5px; }
-        .bar-frame {
-            height: 12px; width: 100%; border: 2px solid var(--neon-blue);
-            border-radius: 6px; padding: 2px;
-            box-shadow: 0 0 5px var(--neon-blue);
-        }
-        .bar-fill {
-            height: 100%; background: var(--neon-blue); border-radius: 4px; width: 50%;
-            box-shadow: 0 0 8px var(--neon-blue); transition: width 0.5s ease;
-        }
-        .status-value { text-align: right; font-size: 0.9rem; margin-top: 2px; }
-
+        .status-label { display: flex; align-items: center; font-weight: 600; font-size: 0.9rem; margin-bottom: 4px; }
+        .bar-frame { height: 10px; width: 100%; border: 1px solid var(--neon-blue); border-radius: 5px; padding: 1px; box-shadow: 0 0 5px var(--neon-blue); }
+        .bar-fill { height: 100%; background: var(--neon-blue); border-radius: 3px; width: 50%; box-shadow: 0 0 8px var(--neon-blue); transition: width 0.5s ease; }
+        .status-value { text-align: right; font-size: 0.8rem; margin-top: 2px; opacity: 0.8; }
         .fatigue-group { display: flex; flex-direction: column; align-items: center; }
-        .fatigue-val { font-size: 1.4rem; font-weight: 700; }
 
-        /* --- SEÇÃO INFERIOR (ATRIBUTOS) --- */
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px 10px; margin-top: 10px; }
+        /* SEÇÃO ATRIBUTOS */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 10px; margin-top: 10px; }
         .stat-item { display: flex; align-items: center; }
-        .stat-label { font-weight: 600; font-size: 1.2rem; margin-right: 10px; letter-spacing: 1px; }
-        .stat-value { font-size: 1.8rem; font-weight: 700; }
+        .stat-label { font-weight: 600; font-size: 1.1rem; margin-right: 8px; width: 50px; }
+        .stat-value { font-size: 1.6rem; font-weight: 700; min-width: 40px; text-align: center; }
         .plus-btn {
-            background: var(--neon-blue); border: none; color: var(--bg-dark);
-            width: 24px; height: 24px; font-weight: bold; font-family: inherit;
-            margin-left: 15px; cursor: pointer; box-shadow: 0 0 10px var(--neon-blue);
+            background: var(--neon-blue); border: none; color: #000;
+            width: 22px; height: 22px; font-weight: bold; margin-left: 10px;
+            cursor: pointer; box-shadow: 0 0 8px var(--neon-blue);
             display: flex; align-items: center; justify-content: center;
         }
 
-        .points-container { grid-column: span 2; text-align: right; margin-top: 20px; font-size: 1.1rem; }
-        .points-val { font-size: 2rem; font-weight: 700; margin-left: 10px; }
+        /* INFO FOOTER (GOLD/XP) */
+        .info-footer { 
+            grid-column: span 2; display: flex; justify-content: space-between; align-items: center; 
+            margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 10px; 
+        }
+        .points-val { font-size: 1.5rem; font-weight: 700; margin-left: 5px; }
 
-        /* --- NAVEGAÇÃO INFERIOR --- */
+        /* LOJA E INVENTÁRIO */
+        .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .shop-item { 
+            border: 1px solid var(--neon-blue); padding: 10px; text-align: center; 
+            background: rgba(0,0,0,0.5); cursor: pointer; transition: 0.2s;
+        }
+        .shop-item:active { transform: scale(0.95); background: rgba(0, 200, 255, 0.2); }
+        .shop-item h4 { font-size: 0.9rem; margin-bottom: 5px; }
+        .price { color: var(--gold); text-shadow: 0 0 5px var(--gold); font-size: 0.9rem; }
+
+        /* QUESTS */
+        .quest-item { 
+            border-bottom: 1px solid rgba(0, 234, 255, 0.3); padding: 15px 0; 
+            display: flex; justify-content: space-between; align-items: center; 
+        }
+        .quest-checkbox { width: 24px; height: 24px; accent-color: var(--neon-blue); cursor: pointer; }
+
+        /* NAV BAR */
         .nav-bar {
             position: fixed; bottom: 0; left: 0; width: 100%;
-            background: rgba(0, 10, 20, 0.9); border-top: 2px solid var(--neon-blue);
+            background: rgba(0, 5, 15, 0.95); border-top: 2px solid var(--neon-blue);
             display: flex; justify-content: space-around; padding: 15px 0; z-index: 100;
-            box-shadow: 0 -2px 10px rgba(0, 200, 255, 0.3);
+            box-shadow: 0 -5px 20px rgba(0, 200, 255, 0.2);
         }
-        .nav-btn { background: none; border: none; color: rgba(255,255,255,0.5); font-family: inherit; font-size: 1rem; text-transform: uppercase; font-weight: 600; letter-spacing: 1px; text-shadow: none; transition: 0.3s; }
-        .nav-btn.active { color: var(--neon-blue); text-shadow: var(--neon-glow); }
+        .nav-btn { background: none; border: none; color: #555; font-family: 'Chakra Petch', sans-serif; font-size: 0.9rem; font-weight: bold; letter-spacing: 1px; transition: 0.3s; }
+        .nav-btn.active { color: var(--neon-blue); text-shadow: 0 0 8px var(--neon-blue); transform: scale(1.1); }
 
-        /* Esconde seções não ativas */
-        .content-section { display: none; width: 100%; display: flex; justify-content: center;}
-        .content-section.active { display: flex; }
-
-        /* Estilos para outras abas (simplificado para focar no status) */
-        .panel-frame {
-            width: 100%; max-width: 600px; border: 2px solid var(--neon-blue); padding: 20px;
-            background: rgba(0, 10, 30, 0.6); box-shadow: var(--neon-glow); margin-bottom: 80px;
+        /* Notificações e Punição */
+        #notification { 
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.95); border: 2px solid var(--neon-blue); color: var(--neon-blue);
+            padding: 20px; z-index: 200; display: none; text-align: center; width: 80%;
+            box-shadow: 0 0 30px var(--neon-blue); font-size: 1.2rem; font-weight: bold;
         }
-        .quest-item { border-bottom: 1px solid var(--neon-blue); padding: 15px 0; display: flex; justify-content: space-between; align-items: center; }
-        .quest-checkbox { width: 25px; height: 25px; accent-color: var(--neon-blue); margin-left: 15px; }
+        .penalty-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(20,0,0,0.95); z-index: 999; display: none;
+            flex-direction: column; justify-content: center; align-items: center;
+            border: 4px solid red; box-shadow: inset 0 0 50px red;
+        }
+
+        .content-section { display: none; }
+        .content-section.active { display: block; animation: fadeUp 0.3s forwards; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .action-btn {
+            width: 100%; padding: 12px; margin-top: 20px;
+            background: rgba(0, 200, 255, 0.1); border: 1px solid var(--neon-blue);
+            color: var(--neon-blue); font-weight: bold; font-family: inherit;
+            cursor: pointer; text-transform: uppercase; letter-spacing: 2px;
+            transition: 0.3s;
+        }
+        .action-btn:hover { background: var(--neon-blue); color: #000; box-shadow: 0 0 15px var(--neon-blue); }
+
     </style>
 </head>
 <body>
 
+    <div id="notification">SYSTEM MESSAGE</div>
+    <div id="daily-timer" class="timer-display">00:00:00</div>
+
+    <div id="penalty-zone" class="penalty-overlay">
+        <h1 style="color: red; font-size: 2.5rem; text-shadow: 0 0 20px red; margin-bottom: 20px;">PENALTY ZONE</h1>
+        <p style="color: #fff; text-align: center; margin-bottom: 30px;">DAILY QUEST FAILED.</p>
+        <div style="border: 1px solid red; padding: 20px; color: red; margin-bottom: 20px;">SURVIVE UNTIL RESET</div>
+        <button onclick="game.usePotion()" class="action-btn" style="border-color:red; color:red">USE RETURN STONE</button>
+        <button onclick="game.clearPenalty()" class="action-btn" style="border-color:#555; color:#555; margin-top:10px">I COMPLETED THE PENALTY</button>
+    </div>
+
     <div id="tab-status" class="content-section active">
-        <div style="width: 100%; max-width: 600px;">
-            <div class="main-frame top-section">
-                <div class="status-group">
-                    <div class="status-label">
-                        <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/><path d="M19 3H5v18h14V3z" fill="none"/><path d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 9h-2v-2h2v2zm0-4h-2v-4h2v4z" opacity=".3"/><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8 8 8zm-1-5h2v2h-2zm0-8h2v6h-2z"/></svg>
-                        HP
-                    </div>
-                    <div class="bar-frame"><div id="hp-bar" class="bar-fill" style="width: 100%"></div></div>
-                    <div class="status-value">100/100</div>
+        <div class="main-frame top-section">
+            <div class="status-group">
+                <div class="status-label"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg> HP</div>
+                <div class="bar-frame"><div id="hp-bar" class="bar-fill" style="width: 100%"></div></div>
+                <div class="status-value">100/100</div>
+            </div>
+            <div class="status-group">
+                <div class="status-label"><svg class="icon-sm" viewBox="0 0 24 24"><path d="M13 3h-2v2h2V3zm4 4h-2v2h2V7zM9 7H7v2h2V7z"/></svg> MP</div>
+                <div class="bar-frame"><div id="mp-bar" class="bar-fill" style="width: 100%"></div></div>
+                <div class="status-value">10/10</div>
+            </div>
+            <div class="fatigue-group">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8 8 8zm1-13h-2v6h2V7zm0 8h-2v2h2v-2z"/></svg>
+                <div style="font-size: 0.7rem; font-weight: 600;">FATIGUE</div>
+                <div class="fatigue-val">0</div>
+            </div>
+        </div>
+
+        <div class="main-frame">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M7.95 14.5c.66 0 1.2-.54 1.2-1.2V9.7c0-.66-.54-1.2-1.2-1.2s-1.2.54-1.2 1.2v3.6c0 .66.54 1.2 1.2 1.2zm0-6.5c1.1 0 2 .9 2 2v3.6c0 1.1-.9 2-2 2s-2-.9-2-2V10c0-1.1.9-2 2-2zm8.1 0c1.1 0 2 .9 2 2v3.6c0 1.1-.9 2-2 2s-2-.9-2-2V10c0-1.1.9-2 2-2zm0 6.5c.66 0 1.2-.54 1.2-1.2V9.7c0-.66-.54-1.2-1.2-1.2s-1.2.54-1.2 1.2v3.6c0 .66.54 1.2 1.2 1.2z"/></svg>
+                    <span class="stat-label">STR:</span><span id="val-STR" class="stat-value">10</span>
+                    <button class="plus-btn" onclick="game.addStat('STR')">+</button>
                 </div>
-                <div class="status-group">
-                    <div class="status-label">
-                        <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M13 3h-2v2h2V3zm4 4h-2v2h2V7zM9 7H7v2h2V7zm9 4h-2v2h2v-2zM7 11H5v2h2v-2zm12 4h-2v2h2v-2zM5 15H3v2h2v-2zm14 4h-2v2h2v-2zM3 19H1v2h2v-2zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8 8 8zm-5-7.5c0 .83-.67 1.5-1.5 1.5S4 13.33 4 12.5 4.67 11 5.5 11 7 11.67 7 12.5zm13 0c0 .83-.67 1.5-1.5 1.5S17 13.33 17 12.5 17.67 11 18.5 11 20 11.67 20 12.5zM10 12c0 .83-.67 1.5-1.5 1.5S7 12.83 7 12s.67-1.5 1.5-1.5S10 11.17 10 12zm5 0c0 .83-.67 1.5-1.5 1.5S12 12.83 12 12s.67-1.5 1.5-1.5S15 11.17 15 12z"/></svg>
-                        MP
-                    </div>
-                    <div class="bar-frame"><div id="mp-bar" class="bar-fill" style="width: 100%"></div></div>
-                    <div class="status-value">10/10</div>
+                <div class="stat-item">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                    <span class="stat-label">VIT:</span><span id="val-VIT" class="stat-value">10</span>
+                    <button class="plus-btn" onclick="game.addStat('VIT')">+</button>
                 </div>
-                <div class="fatigue-group">
-                    <svg class="icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8 8 8zm1-13h-2v6h2V7zm0 8h-2v2h2v-2z"/></svg>
-                    <div style="font-size: 0.8rem; font-weight: 600;">FATIGUE:</div>
-                    <div class="fatigue-val">0</div>
+                <div class="stat-item">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM9.8 8.9L7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3C14.8 12 16.8 13 19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1L6 8.3V13h2V9.6l1.8-.7z"/></svg>
+                    <span class="stat-label">AGI:</span><span id="val-AGI" class="stat-value">10</span>
+                    <button class="plus-btn" onclick="game.addStat('AGI')">+</button>
+                </div>
+                <div class="stat-item">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
+                    <span class="stat-label">INT:</span><span id="val-INT" class="stat-value">10</span>
+                    <button class="plus-btn" onclick="game.addStat('INT')">+</button>
+                </div>
+                <div class="stat-item">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8 8 8zm-3-8c0-1.66 1.34-3 3-3s3 1.34 3 3-1.34 3-3 3-3-1.34-3-3zm3-1c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm2 6.5V18H7v-1.5h7z"/></svg>
+                    <span class="stat-label">PER:</span><span id="val-PER" class="stat-value">10</span>
+                    <button class="plus-btn" onclick="game.addStat('PER')">+</button>
                 </div>
             </div>
 
-            <div class="main-frame">
-                <div class="stats-grid" id="stats-container">
-                    <div class="stat-item">
-                        <svg class="icon" viewBox="0 0 24 24"><path d="M7.95 14.5c.66 0 1.2-.54 1.2-1.2V9.7c0-.66-.54-1.2-1.2-1.2s-1.2.54-1.2 1.2v3.6c0 .66.54 1.2 1.2 1.2zm0-6.5c1.1 0 2 .9 2 2v3.6c0 1.1-.9 2-2 2s-2-.9-2-2V10c0-1.1.9-2 2-2zm8.1 0c1.1 0 2 .9 2 2v3.6c0 1.1-.9 2-2 2s-2-.9-2-2V10c0-1.1.9-2 2-2zm0 6.5c.66 0 1.2-.54 1.2-1.2V9.7c0-.66-.54-1.2-1.2-1.2s-1.2.54-1.2 1.2v3.6c0 .66.54 1.2 1.2 1.2zM19 13h-2V9h2v4zM5 13H3V9h2v4zm14-6H5V5h14v2zM5 19h14v-2H5v2z"/></svg>
-                        <span class="stat-label">STR:</span>
-                        <span id="val-STR" class="stat-value">10</span>
-                        <button class="plus-btn" style="display:none" onclick="game.addStat('STR')">+</button>
-                    </div>
-                    <div class="stat-item">
-                        <svg class="icon" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                        <span class="stat-label">VIT:</span>
-                        <span id="val-VIT" class="stat-value">10</span>
-                        <button class="plus-btn" style="display:none" onclick="game.addStat('VIT')">+</button>
-                    </div>
-                    <div class="stat-item">
-                        <svg class="icon" viewBox="0 0 24 24"><path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM9.8 8.9L7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3C14.8 12 16.8 13 19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1L6 8.3V13h2V9.6l1.8-.7z"/></svg>
-                        <span class="stat-label">AGI:</span>
-                        <span id="val-AGI" class="stat-value">10</span>
-                        <button class="plus-btn" style="display:none" onclick="game.addStat('AGI')">+</button>
-                    </div>
-                    <div class="stat-item">
-                        <svg class="icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
-                        <span class="stat-label">INT:</span>
-                        <span id="val-INT" class="stat-value">10</span>
-                        <button class="plus-btn" style="display:none" onclick="game.addStat('INT')">+</button>
-                    </div>
-                    <div class="stat-item">
-                        <svg class="icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8 8 8zm-3-8c0-1.66 1.34-3 3-3s3 1.34 3 3-1.34 3-3 3-3-1.34-3-3zm3-1c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm2 6.5V18H7v-1.5h7z"/></svg>
-                        <span class="stat-label">PER:</span>
-                        <span id="val-PER" class="stat-value">10</span>
-                        <button class="plus-btn" style="display:none" onclick="game.addStat('PER')">+</button>
-                    </div>
+            <div class="info-footer">
+                <div>
+                    <div>GOLD: <span id="gold-val" style="color:var(--gold)">0</span></div>
+                    <div style="font-size:0.8rem">XP: <span id="xp-val">0/100</span></div>
                 </div>
-
-                <div class="points-container">
-                    Available Ability Points: 
-                    <span id="pts-val" class="points-val">0</span>
+                <div style="text-align: right;">
+                    <div style="font-size:0.8rem">Available Points:</div>
+                    <div id="pts-val" class="points-val">0</div>
                 </div>
             </div>
         </div>
     </div>
 
     <div id="tab-quests" class="content-section">
-        <div class="panel-frame">
+        <div class="main-frame">
             <h2 style="text-align: center; margin-bottom: 20px; letter-spacing: 2px;">DAILY QUESTS</h2>
             <div id="quest-list"></div>
+            <button class="action-btn" onclick="game.finishDay()">[CLAIM REWARDS / FINISH DAY]</button>
+        </div>
+    </div>
+
+    <div id="tab-shop" class="content-section">
+        <div class="main-frame">
+            <h2 style="text-align: center; color: var(--gold); margin-bottom: 20px;">SYSTEM STORE</h2>
+            <div class="shop-grid">
+                <div class="shop-item" onclick="game.buy('Return Stone', 200)">
+                    <h4>RETURN STONE</h4>
+                    <span class="price">200 G</span>
+                </div>
+                <div class="shop-item" onclick="game.buy('Instant Recovery', 100)">
+                    <h4>POTION (HP)</h4>
+                    <span class="price">100 G</span>
+                </div>
+                <div class="shop-item" onclick="game.buy('Chocolate', 50)">
+                    <h4>CHOCOLATE</h4>
+                    <span class="price">50 G</span>
+                </div>
+                <div class="shop-item" onclick="game.buy('Energy Drink', 80)">
+                    <h4>ENERGY DRINK</h4>
+                    <span class="price">80 G</span>
+                </div>
+            </div>
+            <h3 style="margin-top:20px; border-bottom:1px solid #333">INVENTORY</h3>
+            <div id="inv-list" style="padding:10px; font-size:0.9rem"></div>
         </div>
     </div>
 
     <nav class="nav-bar">
         <button class="nav-btn active" onclick="ui.tab('status')">STATUS</button>
         <button class="nav-btn" onclick="ui.tab('quests')">QUESTS</button>
+        <button class="nav-btn" onclick="ui.tab('shop')">SHOP</button>
     </nav>
 
     <script>
         const game = {
             data: {
                 stats: { STR: 19, VIT: 10, AGI: 10, INT: 10, PER: 10 },
-                pts: 3,
+                pts: 3, xp: 0, xpMax: 100, gold: 0, lvl: 1,
+                lastLogin: null,
                 quests: [
-                    { txt: 'PUSH-UPS', count: 100, done: false },
-                    { txt: 'SIT-UPS', count: 100, done: false },
-                    { txt: 'SQUATS', count: 100, done: false },
-                    { txt: 'RUNNING', count: '10KM', done: false }
-                ]
+                    { txt: 'PUSH-UPS', count: 100, done: false, xp: 20, gold: 10 },
+                    { txt: 'SIT-UPS', count: 100, done: false, xp: 20, gold: 10 },
+                    { txt: 'SQUATS', count: 100, done: false, xp: 20, gold: 10 },
+                    { txt: 'RUNNING', count: '10KM', done: false, xp: 30, gold: 20 }
+                ],
+                inventory: []
             },
+            
             init() {
-                const save = localStorage.getItem('sl_sys_v4');
+                const save = localStorage.getItem('sl_sys_v5');
                 if(save) this.data = JSON.parse(save);
+                
+                // Reseta missões se for outro dia
+                const today = new Date().toDateString();
+                if(this.data.lastLogin !== today) {
+                    this.data.quests.forEach(q => q.done = false);
+                    this.data.lastLogin = today;
+                    this.save();
+                }
+
                 ui.render();
+                setInterval(this.clockLoop, 1000);
             },
-            save() { localStorage.setItem('sl_sys_v4', JSON.stringify(this.data)); },
+
+            save() { localStorage.setItem('sl_sys_v5', JSON.stringify(this.data)); },
+
+            clockLoop() {
+                const now = new Date();
+                const end = new Date(); end.setHours(23, 59, 59);
+                const diff = end - now;
+                const h = Math.floor(diff/(1000*60*60));
+                const m = Math.floor((diff%(1000*60*60))/(1000*60));
+                const s = Math.floor((diff%(1000*60))/1000);
+                
+                const timerEl = document.getElementById('daily-timer');
+                timerEl.innerText = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+                
+                if(h < 3) {
+                    document.body.classList.add('emergency');
+                    timerEl.style.color = 'red';
+                    timerEl.style.borderColor = 'red';
+                } else {
+                    document.body.classList.remove('emergency');
+                }
+            },
+
             addStat(key) {
                 if(this.data.pts > 0) {
                     this.data.stats[key]++;
@@ -213,9 +322,70 @@
                     this.save(); ui.render();
                 }
             },
+
             toggleQuest(idx) {
-                this.data.quests[idx].done = !this.data.quests[idx].done;
+                const q = this.data.quests[idx];
+                if(q.done) return; // Já feito
+                
+                q.done = true;
+                this.data.xp += q.xp;
+                this.data.gold += q.gold;
+                
+                if(this.data.xp >= this.data.xpMax) {
+                    this.data.xp -= this.data.xpMax;
+                    this.data.lvl++;
+                    this.data.xpMax = Math.floor(this.data.xpMax * 1.2);
+                    this.data.pts += 3;
+                    ui.notify("LEVEL UP!");
+                }
+
+                ui.notify(`QUEST COMPLETE! +${q.xp}XP`);
                 this.save(); ui.render();
+            },
+
+            finishDay() {
+                if(this.data.quests.every(q => q.done)) {
+                    ui.notify("ALL DAILY QUESTS COMPLETED.");
+                    // Reset opcional ou bonus extra aqui
+                } else {
+                    document.getElementById('penalty-zone').style.display = 'flex';
+                }
+            },
+
+            buy(name, cost) {
+                if(this.data.gold >= cost) {
+                    this.data.gold -= cost;
+                    this.data.inventory.push(name);
+                    ui.notify("ITEM PURCHASED: " + name);
+                    this.save(); ui.render();
+                } else {
+                    ui.notify("NOT ENOUGH GOLD");
+                }
+            },
+
+            usePotion() {
+                const idx = this.data.inventory.indexOf('Return Stone');
+                if(idx > -1) {
+                    this.data.inventory.splice(idx, 1);
+                    document.getElementById('penalty-zone').style.display = 'none';
+                    ui.notify("PENALTY CLEARED.");
+                    this.save(); ui.render();
+                } else {
+                    ui.notify("NO RETURN STONE IN INVENTORY");
+                }
+            },
+
+            clearPenalty() {
+                if(confirm("Did you really complete the survival penalty?")) {
+                    document.getElementById('penalty-zone').style.display = 'none';
+                }
+            },
+            
+            useItem(idx) {
+                if(confirm("Use this item?")) {
+                    this.data.inventory.splice(idx, 1);
+                    this.save(); ui.render();
+                }
             }
         };
 
@@ -228,33 +398,51 @@
             },
             render() {
                 const d = game.data;
-                // Render Stats
+                
+                // Stats
                 for(let key in d.stats) {
-                    document.getElementById('val-'+key).innerText = d.stats[key];
+                    const el = document.getElementById('val-'+key);
+                    if(el) el.innerText = d.stats[key];
                 }
                 document.getElementById('pts-val').innerText = d.pts;
+                document.getElementById('gold-val').innerText = d.gold;
+                document.getElementById('xp-val').innerText = `${d.xp}/${d.xpMax}`;
 
-                // Show/Hide Plus Buttons
+                // Botões de +
                 document.querySelectorAll('.plus-btn').forEach(btn => {
                     btn.style.display = d.pts > 0 ? 'flex' : 'none';
                 });
 
-                // Render Quests
+                // Quests
                 const qList = document.getElementById('quest-list');
                 qList.innerHTML = '';
                 d.quests.forEach((q, i) => {
                     qList.innerHTML += `
-                        <div class="quest-item" style="${q.done ? 'opacity:0.5; text-decoration:line-through' : ''}">
-                            <div style="font-size: 1.2rem; font-weight: 600;">${q.txt} <span style="margin-left:10px;">[${q.count}]</span></div>
-                            <input type="checkbox" class="quest-checkbox" ${q.done ? 'checked' : ''} onchange="game.toggleQuest(${i})">
+                        <div class="quest-item" style="${q.done ? 'opacity:0.5;' : ''}">
+                            <div style="font-size: 1rem; font-weight: 600; ${q.done ? 'text-decoration:line-through' : ''}">
+                                ${q.txt} <span style="margin-left:5px; color:#aaa">[${q.count}]</span>
+                            </div>
+                            <input type="checkbox" class="quest-checkbox" ${q.done ? 'checked disabled' : ''} onchange="game.toggleQuest(${i})">
                         </div>
                     `;
                 });
+
+                // Inventory
+                const invList = document.getElementById('inv-list');
+                invList.innerHTML = d.inventory.length ? d.inventory.map((it, i) => 
+                    `<div style="display:flex; justify-content:space-between; margin-bottom:5px; border-bottom:1px dashed #444; padding:5px">
+                        ${it} <span onclick="game.useItem(${i})" style="color:var(--neon-blue); cursor:pointer">[USE]</span>
+                    </div>`
+                ).join('') : 'Empty';
+            },
+            notify(msg) {
+                const n = document.getElementById('notification');
+                n.innerText = msg; n.style.display = 'block';
+                setTimeout(() => n.style.display = 'none', 3000);
             }
         };
 
         game.init();
-        // PWA - Mantém o service worker ativo
         if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
     </script>
 </body>
