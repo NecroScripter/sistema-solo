@@ -1,4 +1,4 @@
-const CACHE_NAME = 'solo-system-v9-ICONS';
+const CACHE_NAME = 'solo-system-v10-REAL';
 
 // Arquivos vitais
 const PRE_CACHE = [
@@ -48,3 +48,4 @@ self.addEventListener('fetch', (event) => {
   );
 
 });
+
