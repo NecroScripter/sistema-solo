@@ -1,4 +1,4 @@
-const CACHE_NAME = 'solo-system-v10-REAL';
+const CACHE_NAME = 'solo-system-v11-MANDARIN';
 
 // Arquivos vitais
 const PRE_CACHE = [
@@ -48,4 +48,5 @@ self.addEventListener('fetch', (event) => {
   );
 
 });
+
 
