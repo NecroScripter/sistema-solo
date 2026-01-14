@@ -1,21 +1,21 @@
-const CACHE_NAME = 'solo-leveling-v1';
+const CACHE_NAME = 'solo-leveling-v2'; // Mudei para v2 para forçar atualização
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icon.png',
+  './',
+  './index.html',
+  './manifest.json',
+  './icon.png',
   'https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap'
 ];
 
-// Instalação: Cacheia os arquivos iniciais
 self.addEventListener('install', (event) => {
+  self.skipWaiting(); // Força a instalação imediata
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => cache.addAll(ASSETS))
+      .catch(err => console.error('Erro ao cachear:', err))
   );
 });
 
-// Ativação: Limpa caches antigos se houver atualização
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -24,9 +24,9 @@ self.addEventListener('activate', (event) => {
       );
     })
   );
+  return self.clients.claim(); // Assume o controle da página imediatamente
 });
 
-// Interceptação: Tenta servir do cache, se falhar, vai pra internet
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request)
