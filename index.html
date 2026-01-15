@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SYSTEM V20</title>
+    <title>SYSTEM V21</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700&family=Noto+Sans+SC&family=Noto+Sans+JP&display=swap" rel="stylesheet">
     <style>
         :root { --blue: #00eaff; --glow: 0 0 10px #00eaff; --bg: #02050a; --gold: #ffaa00; }
@@ -28,9 +28,17 @@
             z-index: 50;
         }
 
-        /* TIMER E KEBAB */
-        .timer-row { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; /* ESPAÇO PEDIDO ENTRE RELOGIO E OURO */ }
-        .timer { font-size: 0.9rem; font-weight: bold; border: 1px solid var(--blue); padding: 4px 10px; background: #000; box-shadow: var(--glow); }
+        /* TIMER E KEBAB (MODIFICADO V21) */
+        .timer-row { display: flex; gap: 15px; align-items: center; margin-bottom: 10px; }
+        
+        /* Timer limpo, sem caixa, cor azul neon */
+        .timer { 
+            font-size: 1rem; 
+            font-weight: bold; 
+            color: var(--blue); 
+            text-shadow: 0 0 5px var(--blue);
+        }
+
         .kebab-btn { width: 20px; height: 20px; position: relative; background: none; border: none; cursor: pointer; display: flex; justify-content: center; align-items: center; }
         .kebab-btn::before { content: ''; width: 4px; height: 4px; background: var(--blue); border-radius: 50%; box-shadow: 0 -7px 0 var(--blue), 0 7px 0 var(--blue); filter: drop-shadow(0 0 2px var(--blue)); }
 
@@ -169,35 +177,35 @@
                 status: "STATUS", quests: "DAILY QUESTS", shop: "SHOP", pts: "POINTS:", gold: "GOLD:", settings: "SETTINGS", 
                 inv: "INVENTORY", empty: "Empty Inventory", use: "USE", claim: "[ CLAIM REWARDS ]", 
                 q1: "Push-ups", q2: "Sit-ups", q3: "Squats", q4: "10km Run", 
-                j0: "NONE", j1: "NECROMANCER", j2: "SHADOW MONARCH", j3: "SOUL SHEPHERD", j4: "TITAN OF TWILIGHT",
+                j0: "NONE", j2: "SHADOW MONARCH", j3: "SOUL SHEPHERD", j4: "TITAN OF TWILIGHT",
                 t0: "NONE", t1: "WOLF ASSASSIN", t2: "ONE WHO OVERCAME ADVERSITY", t3: "DEMON SLAYER"
             },
             pt: { 
                 status: "STATUS", quests: "MISSÕES", shop: "LOJA", pts: "PONTOS:", gold: "OURO:", settings: "CONFIGURAÇÕES", 
                 inv: "INVENTÁRIO", empty: "Vazio", use: "USAR", claim: "[ RESGATAR RECOMPENSA ]", 
                 q1: "Flexões", q2: "Abdominais", q3: "Agachamentos", q4: "Correr 10km",
-                j0: "NENHUM", j1: "NECROMANTE", j2: "MONARCA DAS SOMBRAS", j3: "PASTOR DE ALMAS", j4: "TITÃ DO CREPÚSCULO",
+                j0: "NENHUM", j2: "MONARCA DAS SOMBRAS", j3: "PASTOR DE ALMAS", j4: "TITÃ DO CREPÚSCULO",
                 t0: "NENHUM", t1: "ASSASSINO DE LOBOS", t2: "SUPEROU A ADVERSIDADE", t3: "ASSASSINO DE DEMÔNIOS"
             },
             es: { 
                 status: "ESTADO", quests: "MISIONES", shop: "TIENDA", pts: "PUNTOS:", gold: "ORO:", settings: "AJUSTES", 
                 inv: "INVENTARIO", empty: "Vacío", use: "USAR", claim: "[ RECLAMAR RECOMPENSA ]", 
                 q1: "Flexiones", q2: "Abdominales", q3: "Sentadillas", q4: "Correr 10km",
-                j0: "NINGUNO", j1: "NECROMANTE", j2: "MONARCA DE LAS SOMBRAS", j3: "PASTOR DE ALMAS", j4: "TITÁN DEL CREPÚSCULO",
+                j0: "NINGUNO", j2: "MONARCA DE LAS SOMBRAS", j3: "PASTOR DE ALMAS", j4: "TITÁN DEL CREPÚSCULO",
                 t0: "NINGUNO", t1: "ASESINO DE LOBOS", t2: "SUPERÓ LA ADVERSIDAD", t3: "CAZADOR DE DEMONIOS"
             },
             ja: { 
                 status: "ステータス", quests: "クエスト", shop: "ショップ", pts: "ポイント:", gold: "ゴールド:", settings: "設定", 
                 inv: "インベントリ", empty: "空", use: "使う", claim: "[ 報酬を受け取る ]", 
                 q1: "腕立て伏せ", q2: "腹筋", q3: "スクワット", q4: "10km走",
-                j0: "なし", j1: "ネクロマンサー", j2: "影の君主", j3: "魂の羊飼い", j4: "黄昏の巨人",
+                j0: "なし", j2: "影の君主", j3: "魂の羊飼い", j4: "黄昏の巨人",
                 t0: "なし", t1: "狼殺し", t2: "逆境を乗り越えし者", t3: "悪魔狩り"
             },
             zh: { 
                 status: "状态", quests: "每日任务", shop: "商店", pts: "可用点数:", gold: "金币:", settings: "设置", 
                 inv: "仓库", empty: "仓库空空如也", use: "使用", claim: "[ 领取奖励 ]", 
                 q1: "俯卧撑", q2: "仰卧起坐", q3: "深蹲", q4: "跑步10公里",
-                j0: "无", j1: "亡灵法师", j2: "暗影君主", j3: "灵魂牧羊人", j4: "黄昏泰坦",
+                j0: "无", j2: "暗影君主", j3: "灵魂牧羊人", j4: "黄昏泰坦",
                 t0: "无", t1: "狼族杀手", t2: "战胜逆境者", t3: "恶魔猎手"
             }
         };
@@ -209,14 +217,14 @@
                 quests: [{id:'q1', done:false, reward:10}, {id:'q2', done:false, reward:10}, {id:'q3', done:false, reward:15}, {id:'q4', done:false, reward:25}] 
             },
             init() {
-                const s = localStorage.getItem('solo_v20');
+                const s = localStorage.getItem('solo_v21');
                 if(s) this.data = JSON.parse(s);
                 ui.render();
                 setInterval(() => this.tick(), 1000);
             },
-            save() { localStorage.setItem('solo_v20', JSON.stringify(this.data)); },
+            save() { localStorage.setItem('solo_v21', JSON.stringify(this.data)); },
             setLang(l) { this.data.lang = l; this.save(); ui.render(); },
-            reset() { if(confirm("RESET SYSTEM?")) { localStorage.removeItem('solo_v20'); location.reload(); } },
+            reset() { if(confirm("RESET SYSTEM?")) { localStorage.removeItem('solo_v21'); location.reload(); } },
             add(k) { if(this.data.pts > 0) { this.data.stats[k]++; this.data.pts--; this.save(); ui.render(); } },
             tick() {
                 const n = new Date(); const e = new Date(); e.setHours(23,59,59);
@@ -234,12 +242,9 @@
                     this.data.quests.forEach(q => totalGold += q.reward);
                     this.data.gold += totalGold;
                     this.data.xp += 100;
-                    this.data.fatigue += 20; // Fadiga sobe com treino
-                    
+                    this.data.fatigue += 20;
                     if(this.data.xp >= 100) { this.data.xp = 0; this.data.lvl++; this.data.pts += 3; ui.notify("LEVEL UP!"); }
-                    
-                    if(this.data.fatigue > 100) this.data.fatigue = 100; // Limite 100%
-
+                    if(this.data.fatigue > 100) this.data.fatigue = 100;
                     this.data.quests.forEach(q => q.done = false);
                     this.save(); ui.render();
                     ui.notify(`REWARDS CLAIMED: +${totalGold}G`);
@@ -257,29 +262,11 @@
                 this.data.inventory.splice(index, 1);
                 this.save(); ui.render(); ui.notify(msg);
             },
-            // NOVAS LÓGICAS DE RANK/JOB/TITLE
             getRank(l) {
-                if(l <= 3) return 'E';
-                if(l <= 8) return 'D';
-                if(l <= 19) return 'C';
-                if(l <= 39) return 'B';
-                if(l <= 59) return 'A';
-                if(l <= 69) return 'S';
-                if(l <= 89) return 'SS';
-                return 'SSS';
+                if(l <= 3) return 'E'; if(l <= 8) return 'D'; if(l <= 19) return 'C'; if(l <= 39) return 'B'; if(l <= 59) return 'A'; if(l <= 69) return 'S'; if(l <= 89) return 'SS'; return 'SSS';
             },
-            getJobKey(l) {
-                if(l < 40) return 'j0';
-                if(l < 80) return 'j2'; // 40-79 Shadow Monarch (Lore accuracy: Necro is skipped/fast)
-                if(l < 100) return 'j3';
-                return 'j4';
-            },
-            getTitleKey(l) {
-                if(l < 15) return 't0';
-                if(l < 40) return 't1';
-                if(l < 60) return 't2';
-                return 't3';
-            }
+            getJobKey(l) { if(l < 40) return 'j0'; if(l < 80) return 'j2'; if(l < 100) return 'j3'; return 'j4'; },
+            getTitleKey(l) { if(l < 15) return 't0'; if(l < 40) return 't1'; if(l < 60) return 't2'; return 't3'; }
         };
 
         const ui = {
@@ -320,7 +307,6 @@
                 document.getElementById('fatigue-bar').style.width = d.fatigue + "%";
                 document.getElementById('lang').value = d.lang;
 
-                // LOGICA NOVA DE LORE APLICADA
                 document.getElementById('val-rank').innerText = game.getRank(d.lvl);
                 document.getElementById('val-job').innerText = t[game.getJobKey(d.lvl)];
                 document.getElementById('val-title').innerText = t[game.getTitleKey(d.lvl)];
